@@ -1422,7 +1422,7 @@ tr[draggable="true"]{cursor:default}
     <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center">
       <button class="btn btn-outline" onclick="spAutoAssign()" title="Helfer automatisch nach Verfügbarkeit einteilen">⚡ Auto-Assign</button>
       <button class="btn btn-outline" onclick="spExport()">⬇ CSV-Export</button>
-      <button class="btn btn-outline" onclick="spReset()" style="color:var(--red);border-color:var(--red)">↺ Reset</button>
+      <button class="btn btn-outline" onclick="spReset(this)" style="color:var(--red);border-color:var(--red)">↺ Reset</button>
       <div style="flex:1"></div>
       <span style="font-size:.75rem;color:#888">38 Helfer · 8 Schichten · 12 Bereiche</span>
     </div>
@@ -3862,8 +3862,26 @@ function spAutoAssign() {
   alert('⚡ Auto-Assign: ' + changes + ' Helfer wurden automatisch eingeteilt.\n\nHinweis: Verfügbarkeiten wurden berücksichtigt. Bitte Einteilung prüfen.');
 }
 
-function spReset() {
-  if (!confirm('Alle Schichteinteilungen zurücksetzen?\nDiese Aktion kann nicht rückgängig gemacht werden.')) return;
+function spReset(btn) {
+  if (!btn) btn = document.querySelector('[onclick*="spReset"]');
+  if (btn && !btn.dataset.confirming) {
+    btn.dataset.confirming = '1';
+    var orig = btn.innerHTML;
+    btn.innerHTML = 'Sicher?';
+    btn.style.background = '#fdd';
+    btn._t = setTimeout(function(){
+      delete btn.dataset.confirming;
+      btn.innerHTML = orig;
+      btn.style.background = '';
+    }, 3000);
+    return;
+  }
+  if (btn) {
+    clearTimeout(btn._t);
+    delete btn.dataset.confirming;
+    btn.innerHTML = '↺ Reset';
+    btn.style.background = '';
+  }
   spAssignments = {};
   spSave();
   spRender();
