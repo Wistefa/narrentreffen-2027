@@ -326,6 +326,9 @@ tr[draggable="true"]{cursor:default}
       <option value="">Alle Status</option>
       <option>Bestätigt</option>
       <option>Ausstehend</option>
+      <option>Gastgeber</option>
+      <option>Keine Rückmeldung</option>
+      <option>Abgesagt</option>
     </select>
     <button class="btn btn-outline btn-sm" onclick="window.print()">🖨 Liste drucken</button>
   </div>
@@ -3178,9 +3181,11 @@ function filterZuenfte() {
   const st = (document.getElementById('zunftStatus')?.value || '').toLowerCase();
   let visible = 0;
   document.querySelectorAll('#zunftTabelle tbody tr').forEach(tr => {
-    const text   = tr.textContent.toLowerCase();
-    const trLs   = (tr.dataset.ls || '').toLowerCase();
-    const trSt   = (tr.dataset.st || '').toLowerCase();
+    const text  = tr.textContent.toLowerCase();
+    const trLs  = (tr.dataset.ls || '').toLowerCase();
+    // Status: aus Select wenn NT27 initialisiert, sonst data-st
+    const stSel = tr.querySelector('select');
+    const trSt  = stSel ? stSel.value.toLowerCase() : (tr.dataset.st || '').toLowerCase();
     const matchQ  = !q  || text.includes(q);
     const matchLs = !ls || trLs === ls;
     const matchSt = !st || trSt === st;
@@ -4404,6 +4409,7 @@ function nt27InitZunftSelects(tbody){
       sel.onchange=function(){
         Array.from(this.options).forEach(function(o){o.removeAttribute('selected');});
         this.options[this.selectedIndex].setAttribute('selected','selected');
+        var tr=this.closest('tr'); if(tr) tr.dataset.st=this.value;
         var tb=this.closest('tbody'); if(tb) nt27SaveTable(tb,'anmeldung');
       };
       sTd.innerHTML='';
