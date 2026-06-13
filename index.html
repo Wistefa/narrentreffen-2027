@@ -4072,11 +4072,21 @@ function nt27BindRows(tbody, saveKey, opts){
       delBtn.onmousedown=function(e){ e.preventDefault(); e.stopPropagation(); };
       delBtn.onclick=function(e){
         e.preventDefault(); e.stopPropagation();
-        if(confirm('Zeile löschen?')){
+        if(delBtn.dataset.confirming){
+          clearTimeout(delBtn._t);
           row.remove();
           nt27SaveTable(tbody,saveKey);
           if(opts&&opts.renumber) nt27RenumberRows(tbody);
           if(typeof nt27RenderZunftPool==='function') nt27RenderZunftPool();
+        } else {
+          delBtn.dataset.confirming='1';
+          delBtn.innerHTML='✓?';
+          delBtn.style.cssText='opacity:1;background:#fdd;color:#c00';
+          delBtn._t=setTimeout(function(){
+            delete delBtn.dataset.confirming;
+            delBtn.innerHTML='✕';
+            delBtn.style.cssText='';
+          },3000);
         }
       };
       delTd.appendChild(delBtn);
@@ -4272,7 +4282,12 @@ function nt27InitProgramm(){
       db.onmousedown=function(e){ e.preventDefault(); };
       db.onclick=function(e){
         e.stopPropagation();
-        if(confirm('Termin löschen?')){ item.remove(); saveProg(); }
+        if(db.dataset.confirming){
+          clearTimeout(db._t); item.remove(); saveProg();
+        } else {
+          db.dataset.confirming='1'; db.innerHTML='✓?'; db.style.opacity='1';
+          db._t=setTimeout(function(){ delete db.dataset.confirming; db.innerHTML='✕'; db.style.opacity=''; },3000);
+        }
       };
       item.appendChild(db);
     }
