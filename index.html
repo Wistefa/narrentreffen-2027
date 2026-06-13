@@ -180,6 +180,27 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .schicht-cell.warn{background:#fff9c4;color:#a07800}
 .schicht-cell.red{background:#ffebee;color:#c62828}
 
+/* ── SPONSOREN ── */
+.sp-tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;margin-bottom:4px}
+.sp-tier{border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);background:white;display:flex;flex-direction:column}
+.sp-tier-head{padding:16px 18px 12px;font-weight:800;font-size:.95rem;letter-spacing:.4px;text-align:center;line-height:1.3}
+.sp-tier-price{font-size:1.8rem;font-weight:800;text-align:center;padding:4px 18px}
+.sp-tier-max{font-size:.7rem;text-align:center;padding:0 18px 12px;font-weight:600;letter-spacing:.3px;opacity:.7}
+.sp-tier-body{padding:14px 18px 18px;font-size:.78rem;line-height:2.1;flex:1;border-top:1px solid rgba(0,0,0,.07)}
+.sp-tier-body div{cursor:text}
+.sp-tier.tier-gold .sp-tier-head{background:linear-gradient(135deg,#f5c518 0%,#e8b400 100%);color:#111}
+.sp-tier.tier-silber .sp-tier-head{background:linear-gradient(135deg,#9e9e9e 0%,#78909c 100%);color:#fff}
+.sp-tier.tier-bronze .sp-tier-head{background:linear-gradient(135deg,#cd7f32 0%,#a0522d 100%);color:#fff}
+.sp-tier.tier-partner .sp-tier-head{background:linear-gradient(135deg,#1565c0 0%,#0d47a1 100%);color:#fff}
+.sp-tier.tier-gold .sp-tier-price{color:#a07800}
+.sp-tier.tier-silber .sp-tier-price{color:#546e7a}
+.sp-tier.tier-bronze .sp-tier-price{color:#a0522d}
+.sp-tier.tier-partner .sp-tier-price{color:#1565c0}
+.sp-logo-grid{display:flex;flex-wrap:wrap;gap:8px;padding:14px 0 6px}
+.sp-logo-slot{width:80px;height:50px;border:1.5px dashed #ddd;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.65rem;color:#aaa;font-weight:700;text-align:center;line-height:1.3;background:#fafafa}
+.sp-logo-slot.filled{border-style:solid;border-color:#e0e0e0;background:#f9f9f9}
+.sp-progress-bar{height:12px;background:#eee;border-radius:6px;overflow:hidden;margin-top:8px}
+.sp-progress-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,#f5c518,#e8b400);transition:width .6s}
 /* ── DRUCK ── */
 @media print {
   .site-header,.nav,.main > .section:not(#umzug),.section-title,
@@ -253,6 +274,7 @@ tr[draggable="true"]{cursor:default}
     <button class="nav-btn" onclick="show('kontakte',this)">📞 Kontakte</button>
     <button class="nav-btn" onclick="show('reithalle',this)">🏟 Reithalle Setup</button>
     <button class="nav-btn" onclick="show('zmempfang',this)">🏅 ZM-Empfang</button>
+    <button class="nav-btn" onclick="show('sponsoren',this)">💛 Sponsoren</button>
   </nav>
 </header>
 
@@ -3067,6 +3089,232 @@ tr[draggable="true"]{cursor:default}
 
 </section>
 
+<!-- ═══════════════════════════════════════════════ SPONSOREN ═══ -->
+<section class="section" id="sponsoren">
+  <h2 class="section-title">💛 <span>Sponsoren &amp; Partner</span></h2>
+
+  <div class="alert alert-gold">
+    Sponsoring ist ein zentraler Baustein für den Erfolg des Narrentreffens 2027. Mit den richtigen Partnern sichern wir eine professionelle Durchführung und entlasten das Budget. <strong>Gesamtziel: 12.000 € Sponsorengelder + Sachleistungen.</strong>
+  </div>
+
+  <!-- KPI-Karten -->
+  <div class="cards" style="margin-bottom:24px">
+    <div class="card">
+      <div class="card-val" style="color:var(--gold-dark)">8.100 €</div>
+      <div class="card-sub">Gesamtbetrag bestätigt</div>
+    </div>
+    <div class="card">
+      <div class="card-val">8</div>
+      <div class="card-sub">Sponsoren gesamt</div>
+    </div>
+    <div class="card">
+      <div class="card-val" style="color:var(--green)">6</div>
+      <div class="card-sub">Bestätigt</div>
+    </div>
+    <div class="card">
+      <div class="card-val" style="color:var(--orange)">1</div>
+      <div class="card-sub">In Verhandlung</div>
+    </div>
+    <div class="card">
+      <div class="card-val" style="color:var(--blue)">1</div>
+      <div class="card-sub">Angefragt / Offen</div>
+    </div>
+    <div class="card">
+      <div class="card-val">2</div>
+      <div class="card-sub">Sachleistungspartner</div>
+    </div>
+  </div>
+
+  <!-- Sponsor-Pakete -->
+  <div class="panel">
+    <div class="panel-head">📦 Sponsor-Pakete &amp; Leistungen</div>
+    <div class="panel-body">
+      <div class="sp-tiers">
+        <div class="sp-tier tier-gold">
+          <div class="sp-tier-head">🥇 GOLD-PARTNER</div>
+          <div class="sp-tier-price">ab 2.000 €</div>
+          <div class="sp-tier-max">Max. 3 Plätze</div>
+          <div class="sp-tier-body">
+            <div>✅ Logo auf Hauptbanner (groß)</div>
+            <div>✅ Moderationsnennung (Bühne)</div>
+            <div>✅ Programmheft — Ganzseitig</div>
+            <div>✅ VIP-Tisch Brauchtumsabend (4 Pl.)</div>
+            <div>✅ VIP-Tisch ZM-Empfang (2 Pl.)</div>
+            <div>✅ Social Media Feature-Beitrag</div>
+            <div>✅ Danksagung Einladungsschreiben</div>
+          </div>
+        </div>
+        <div class="sp-tier tier-silber">
+          <div class="sp-tier-head">🥈 SILBER-PARTNER</div>
+          <div class="sp-tier-price">ab 1.000 €</div>
+          <div class="sp-tier-max">Max. 5 Plätze</div>
+          <div class="sp-tier-body">
+            <div>✅ Logo auf Hauptbanner</div>
+            <div>✅ Moderationsnennung (Bühne)</div>
+            <div>✅ Programmheft — Halbseite</div>
+            <div>— VIP-Tisch (nicht enthalten)</div>
+            <div>✅ Social Media Erwähnung</div>
+            <div>✅ Danksagung Einladungsschreiben</div>
+          </div>
+        </div>
+        <div class="sp-tier tier-bronze">
+          <div class="sp-tier-head">🥉 BRONZE-PARTNER</div>
+          <div class="sp-tier-price">ab 500 €</div>
+          <div class="sp-tier-max">Unbegrenzt</div>
+          <div class="sp-tier-body">
+            <div>✅ Logo auf Seitenbanner</div>
+            <div>✅ Moderationsnennung (Bühne)</div>
+            <div>✅ Programmheft — Viertelseite</div>
+            <div>— Social Media (nicht enthalten)</div>
+            <div>✅ Danksagung Einladungsschreiben</div>
+          </div>
+        </div>
+        <div class="sp-tier tier-partner">
+          <div class="sp-tier-head">🤝 KOOPERATIONSPARTNER</div>
+          <div class="sp-tier-price">Sachleistung</div>
+          <div class="sp-tier-max">Vereinbarung individuell</div>
+          <div class="sp-tier-body">
+            <div>✅ Moderationsnennung (Bühne)</div>
+            <div>✅ Programmheft — Logozeile</div>
+            <div>✅ Danksagung Einladungsschreiben</div>
+            <div>— Abgeltung durch Sachleistung</div>
+            <div>— Kein Geldwert erforderlich</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sponsorenliste -->
+  <div class="panel">
+    <div class="panel-head">📋 Sponsorenliste</div>
+    <div class="panel-body">
+      <div style="overflow-x:auto">
+        <table class="tbl" id="spTbl">
+          <thead><tr>
+            <th style="width:40px">#</th>
+            <th>Firma / Organisation</th>
+            <th style="width:175px">Stufe</th>
+            <th style="width:115px">Betrag</th>
+            <th>Ansprechpartner</th>
+            <th>Kontakt</th>
+            <th style="width:145px">Status</th>
+            <th>Notiz</th>
+          </tr></thead>
+          <tbody>
+            <tr><td>1</td><td>Raiffeisenbank Sauldorf</td><td>🥇 Gold</td><td>2.500 €</td><td>Herr Hess, Hans</td><td>07571 123456</td><td><span class="pill pill-green">✅ Bestätigt</span></td><td>Hauptsponsor, Logo groß</td></tr>
+            <tr><td>2</td><td>Autohaus Bauer GmbH</td><td>🥇 Gold</td><td>2.000 €</td><td>Frau Bauer, Anna</td><td>07571 567890</td><td><span class="pill pill-green">✅ Bestätigt</span></td><td>Logo auf Eingangsbereich</td></tr>
+            <tr><td>3</td><td>Weinkellerei Sauldorf</td><td>🥈 Silber</td><td>1.500 €</td><td>Herr Siber, Klaus</td><td>07571 901234</td><td><span class="pill pill-green">✅ Bestätigt</span></td><td></td></tr>
+            <tr><td>4</td><td>Metzgerei Boll</td><td>🥈 Silber</td><td>1.000 €</td><td>Familie Boll</td><td>07571 345678</td><td><span class="pill pill-orange">🔄 Verhandlung</span></td><td>Termin KW 25 ausstehend</td></tr>
+            <tr><td>5</td><td>Elektro Schwab</td><td>🥉 Bronze</td><td>600 €</td><td>Stefan Schwab</td><td>0171 9876543</td><td><span class="pill pill-green">✅ Bestätigt</span></td><td></td></tr>
+            <tr><td>6</td><td>Druckhaus Sauldorf</td><td>🥉 Bronze</td><td>500 €</td><td>Klaus Druckmann</td><td>07571 234567</td><td><span class="pill pill-green">✅ Bestätigt</span></td><td>Programmheft-Druck inklusive</td></tr>
+            <tr><td>7</td><td>Getränke Müller KG</td><td>🤝 Kooperationspartner</td><td>Sachleistung</td><td>Franz Müller</td><td>07571 012345</td><td><span class="pill pill-green">✅ Bestätigt</span></td><td>Getränkelieferung gesamt</td></tr>
+            <tr><td>8</td><td>Bäckerei &amp; Cafe Kern</td><td>🤝 Kooperationspartner</td><td>Sachleistung</td><td>Maria Kern</td><td>0151 23456789</td><td><span class="pill pill-blue">❓ Angefragt</span></td><td>Frühstücksbrötchen Aufbautag</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Sponsor hinzufügen -->
+      <div style="margin-top:20px;border-top:1px solid #eee;padding-top:18px">
+        <div style="font-weight:700;font-size:.85rem;margin-bottom:12px;color:#555">➕ Sponsor / Partner hinzufügen</div>
+        <div class="form-grid">
+          <div class="form-group"><label>Firma / Organisation *</label><input type="text" id="spFirma" placeholder="Firmenname"></div>
+          <div class="form-group"><label>Stufe</label>
+            <select id="spStufe">
+              <option>🥇 Gold</option>
+              <option>🥈 Silber</option>
+              <option>🥉 Bronze</option>
+              <option>🤝 Kooperationspartner</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Betrag / Leistung</label><input type="text" id="spBetrag" placeholder="z.B. 1.000 € oder Sachleistung"></div>
+          <div class="form-group"><label>Ansprechpartner</label><input type="text" id="spKontaktName" placeholder="Name"></div>
+          <div class="form-group"><label>Telefon / E-Mail</label><input type="text" id="spKontakt" placeholder="07571 ..."></div>
+          <div class="form-group"><label>Status</label>
+            <select id="spStatus">
+              <option>❓ Angefragt</option>
+              <option>🔄 Verhandlung</option>
+              <option selected>✅ Bestätigt</option>
+              <option>❌ Abgesagt</option>
+            </select>
+          </div>
+          <div class="form-group" style="grid-column:1/-1"><label>Notiz</label><input type="text" id="spNotiz" placeholder="Interne Notizen..."></div>
+        </div>
+        <button class="btn btn-primary" onclick="spSpeichern(this)" style="margin-top:8px">💾 Sponsor speichern</button>
+        <span id="sp-msg" style="margin-left:12px;font-size:.8rem"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Leistungsmatrix -->
+  <div class="panel">
+    <div class="panel-head">📊 Leistungsmatrix</div>
+    <div class="panel-body">
+      <div style="overflow-x:auto">
+        <table class="tbl" id="spLeistungTbl">
+          <thead><tr>
+            <th>Leistung</th>
+            <th style="width:130px;text-align:center">🥇 Gold<br><small style="font-weight:400">ab 2.000 €</small></th>
+            <th style="width:130px;text-align:center">🥈 Silber<br><small style="font-weight:400">ab 1.000 €</small></th>
+            <th style="width:130px;text-align:center">🥉 Bronze<br><small style="font-weight:400">ab 500 €</small></th>
+            <th style="width:130px;text-align:center">🤝 Kooperations&shy;partner</th>
+          </tr></thead>
+          <tbody>
+            <tr><td>Logo auf Hauptbanner (groß)</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td><td style="text-align:center">—</td><td style="text-align:center">—</td></tr>
+            <tr><td>Logo auf Seitenbanner</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td><td style="text-align:center">—</td></tr>
+            <tr><td>Moderationsnennung (Bühne)</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td></tr>
+            <tr><td>Programmheft-Anzeige</td><td style="text-align:center">Ganzseitig</td><td style="text-align:center">Halbseite</td><td style="text-align:center">Viertelseite</td><td style="text-align:center">Logozeile</td></tr>
+            <tr><td>VIP-Tisch Brauchtumsabend</td><td style="text-align:center">✅ (4 Pl.)</td><td style="text-align:center">—</td><td style="text-align:center">—</td><td style="text-align:center">—</td></tr>
+            <tr><td>VIP-Tisch ZM-Empfang</td><td style="text-align:center">✅ (2 Pl.)</td><td style="text-align:center">—</td><td style="text-align:center">—</td><td style="text-align:center">—</td></tr>
+            <tr><td>Social Media Feature-Beitrag</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td><td style="text-align:center">—</td><td style="text-align:center">—</td></tr>
+            <tr><td>Danksagung Einladungsschreiben</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Budget & Offene Punkte -->
+  <div class="panel">
+    <div class="panel-head">💰 Budget-Übersicht Sponsoring</div>
+    <div class="panel-body">
+      <div class="grid2">
+        <div>
+          <table class="tbl" id="spBudgetTbl">
+            <thead><tr><th>Kategorie</th><th style="width:120px">Betrag</th><th style="width:110px">Status</th></tr></thead>
+            <tbody>
+              <tr><td>Gold-Partner (Geldleistung)</td><td>4.500 €</td><td><span class="pill pill-green">bestätigt</span></td></tr>
+              <tr><td>Silber-Partner (Geldleistung)</td><td>2.500 €</td><td><span class="pill pill-orange">teilw.</span></td></tr>
+              <tr><td>Bronze-Partner (Geldleistung)</td><td>1.100 €</td><td><span class="pill pill-green">bestätigt</span></td></tr>
+              <tr><td>Kooperationspartner (Sachleistung)</td><td>ca. 800 €</td><td><span class="pill pill-blue">geschätzt</span></td></tr>
+              <tr><td><strong>Zwischensumme bestätigt</strong></td><td><strong>8.100 €</strong></td><td></td></tr>
+              <tr><td>Noch zu akquirieren</td><td>3.900 €</td><td><span class="pill pill-red">offen</span></td></tr>
+              <tr><td colspan="3" style="padding:10px 8px 6px">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <span style="font-size:.72rem;color:#666;white-space:nowrap">Ziel: 12.000 €</span>
+                  <div class="sp-progress-bar" style="flex:1"><div class="sp-progress-fill" id="spProgressFill" style="width:68%"></div></div>
+                  <span id="spProgressPct" style="font-size:.75rem;font-weight:800;color:var(--gold-dark);white-space:nowrap">68 %</span>
+                </div>
+              </td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <div style="background:var(--gold-light);border:1.5px solid var(--gold);border-radius:8px;padding:14px;font-size:.8rem;line-height:1.9;min-height:180px">
+            <div style="font-weight:700;margin-bottom:8px">📌 Offene Punkte / To-Do</div>
+            <div>• Metzgerei Boll: Angebot senden (KW 25)</div>
+            <div>• Bäckerei Kern: Rückruf abwarten</div>
+            <div>• Sponsorenvertrag-Vorlage erstellen</div>
+            <div>• Logos bei Bestätigten einfordern (Deadline: 15.09.2026)</div>
+            <div>• 2 weitere Bronze-Sponsoren ansprechen</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
 
 
 </main>
@@ -3111,6 +3359,7 @@ function show(id, btn) {
   if (id === 'staende'   && !window._nt27staende)    { window._nt27staende    = true; nt27InitStaende(); }
   if (id === 'reithalle' && !window._nt27reithalle)  { window._nt27reithalle  = true; nt27InitReithalle(); }
   if (id === 'zmempfang' && !window._nt27zmempfang)  { window._nt27zmempfang  = true; nt27InitZmempfang(); }
+  if (id === 'sponsoren' && !window._nt27sponsoren)  { window._nt27sponsoren  = true; nt27InitSponsoren(); }
 }
 
 // ── Chart: Anmeldungsverlauf ─────────────────────────────────────────────────
@@ -4602,6 +4851,110 @@ function nt27InitZmempfang(){
       offeneDiv.addEventListener('blur',function(){ localStorage.setItem('nt27_zm_offene',offeneDiv.innerHTML); nt27Flash(); });
     }
   }
+}
+
+// ── SPONSOREN ────────────────────────────────────────────────────────────────
+function nt27InitSponsoren(){
+  var sec=document.getElementById('sponsoren');
+  if(!sec) return;
+
+  // 1. Section-Title Span
+  var span=sec.querySelector('.section-title span');
+  if(span){
+    var sv=localStorage.getItem('nt27_sp_span'); if(sv!==null) span.textContent=sv;
+    span.contentEditable='true'; span.title='Klicken zum Bearbeiten';
+    span.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();this.blur();}});
+    span.addEventListener('blur',function(){ localStorage.setItem('nt27_sp_span',span.textContent); nt27Flash(); });
+  }
+
+  // 2. Alert-gold
+  var ag=sec.querySelector('.alert-gold');
+  if(ag){
+    var sva=localStorage.getItem('nt27_sp_alert'); if(sva!==null) ag.innerHTML=sva;
+    ag.contentEditable='true';
+    ag.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();this.blur();}});
+    ag.addEventListener('blur',function(){ localStorage.setItem('nt27_sp_alert',ag.innerHTML); nt27Flash(); });
+  }
+
+  // 3. KPI-Karten
+  sec.querySelectorAll('.card-val').forEach(function(el,i){
+    var key='nt27_sp_cv_'+i; var sv=localStorage.getItem(key); if(sv!==null) el.textContent=sv;
+    el.contentEditable='true';
+    el.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();this.blur();}});
+    el.addEventListener('blur',function(){ localStorage.setItem(key,el.textContent); nt27Flash(); });
+  });
+  sec.querySelectorAll('.card-sub').forEach(function(el,i){
+    var key='nt27_sp_cs_'+i; var sv=localStorage.getItem(key); if(sv!==null) el.textContent=sv;
+    el.contentEditable='true';
+    el.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();this.blur();}});
+    el.addEventListener('blur',function(){ localStorage.setItem(key,el.textContent); nt27Flash(); });
+  });
+
+  // 4. Sponsor-Tier-Karten: Body-Div (children[3] jeder .sp-tier)
+  sec.querySelectorAll('.sp-tier').forEach(function(tier,i){
+    var body=tier.children[3]; if(!body) return;
+    var key='nt27_sp_tier_'+i; var sv=localStorage.getItem(key); if(sv!==null) body.innerHTML=sv;
+    body.contentEditable='true';
+    body.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();this.blur();}});
+    body.addEventListener('blur',function(){ localStorage.setItem(key,body.innerHTML); nt27Flash(); });
+  });
+
+  // 5. Tabellen
+  nt27InitTable('spTbl','sp_liste',{renumber:true});
+  nt27InitTable('spLeistungTbl','sp_leistung',{});
+  nt27InitTable('spBudgetTbl','sp_budget',{});
+
+  // 6. Offene Punkte (DIV-Filter wegen nt27InitTable-Button-Injection)
+  var budgetPanel=null;
+  sec.querySelectorAll('.panel').forEach(function(p){
+    var h=p.querySelector('.panel-head');
+    if(h&&h.textContent.includes('Budget-Übersicht Sponsoring')) budgetPanel=p;
+  });
+  if(budgetPanel){
+    var grid2=budgetPanel.querySelector('.grid2');
+    var offeneCol=grid2?Array.from(grid2.children).filter(function(c){return c.tagName==='DIV';}).pop():null;
+    var offeneDiv=offeneCol?offeneCol.firstElementChild:null;
+    if(offeneDiv){
+      var svo=localStorage.getItem('nt27_sp_offene'); if(svo!==null) offeneDiv.innerHTML=svo;
+      offeneDiv.contentEditable='true';
+      offeneDiv.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();this.blur();}});
+      offeneDiv.addEventListener('blur',function(){ localStorage.setItem('nt27_sp_offene',offeneDiv.innerHTML); nt27Flash(); });
+    }
+  }
+}
+
+function spSpeichern(btn){
+  var firma=(document.getElementById('spFirma')||{}).value||'';
+  firma=firma.trim();
+  if(!firma){
+    var msg=document.getElementById('sp-msg');
+    if(msg){msg.textContent='⚠ Bitte Firmenname eingeben.';msg.style.cssText='color:#c00;font-weight:700';}
+    return;
+  }
+  var stufe=document.getElementById('spStufe'); stufe=stufe?stufe.options[stufe.selectedIndex].text:'—';
+  var betrag=(document.getElementById('spBetrag')||{}).value||'—';
+  var kname=(document.getElementById('spKontaktName')||{}).value||'—';
+  var kontakt=(document.getElementById('spKontakt')||{}).value||'—';
+  var status=document.getElementById('spStatus'); status=status?status.options[status.selectedIndex].text:'—';
+  var notiz=(document.getElementById('spNotiz')||{}).value||'';
+
+  var tbody=document.querySelector('#spTbl tbody');
+  if(!tbody) return;
+  var nr=tbody.rows.length+1;
+  var tr=document.createElement('tr');
+  tr.innerHTML='<td>'+nr+'</td><td>'+nt27Escape(firma)+'</td><td>'+nt27Escape(stufe)+'</td><td>'+nt27Escape(betrag)+'</td><td>'+nt27Escape(kname)+'</td><td>'+nt27Escape(kontakt)+'</td><td>'+nt27Escape(status)+'</td><td>'+nt27Escape(notiz)+'</td>';
+  tbody.appendChild(tr);
+  nt27BindRows(tbody,'sp_liste',{renumber:true});
+  nt27RenumberRows(tbody);
+  nt27SaveTable(tbody,'sp_liste');
+
+  ['spFirma','spBetrag','spKontaktName','spKontakt','spNotiz'].forEach(function(id){
+    var el=document.getElementById(id); if(el) el.value='';
+  });
+  var msg=document.getElementById('sp-msg');
+  if(msg){msg.textContent='✅ '+firma+' gespeichert.';msg.style.cssText='color:var(--green);font-weight:700';
+    setTimeout(function(){msg.textContent='';},4000);}
+  nt27Flash();
 }
 
 function staeAnmelden(btn){
