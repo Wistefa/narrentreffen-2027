@@ -201,6 +201,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .sp-logo-slot.filled{border-style:solid;border-color:#e0e0e0;background:#f9f9f9}
 .sp-progress-bar{height:12px;background:#eee;border-radius:6px;overflow:hidden;margin-top:8px}
 .sp-progress-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,#f5c518,#e8b400);transition:width .6s}
+#spTbl select{width:100%;border:none;background:transparent;font-size:.78rem;font-family:inherit;cursor:pointer;padding:2px 0;color:inherit}
+#spTbl select:focus{outline:1px solid var(--gold);border-radius:3px}
 /* ── DRUCK ── */
 @media print {
   .site-header,.nav,.main > .section:not(#umzug),.section-title,
@@ -4901,6 +4903,9 @@ function nt27InitSponsoren(){
 
   // 5. Tabellen
   nt27InitTable('spTbl','sp_liste',{renumber:true});
+  spConvertToSelects(); // Stufe + Status als Auswahlmenü
+  var spTbody=document.querySelector('#spTbl tbody');
+  if(spTbody) new MutationObserver(function(){ spConvertToSelects(); }).observe(spTbody,{childList:true});
   nt27InitTable('spLeistungTbl','sp_leistung',{});
   nt27InitTable('spBudgetTbl','sp_budget',{});
 
@@ -4921,6 +4926,33 @@ function nt27InitSponsoren(){
       offeneDiv.addEventListener('blur',function(){ localStorage.setItem('nt27_sp_offene',offeneDiv.innerHTML); nt27Flash(); });
     }
   }
+}
+
+function spMakeSelectCell(td, options){
+  if(!td) return;
+  var cur=td.querySelector('select')?td.querySelector('select').value:td.textContent.trim();
+  td.removeAttribute('contenteditable'); td.title=''; td.innerHTML='';
+  var sel=document.createElement('select');
+  sel.style.cssText='width:100%;border:none;background:transparent;font-size:.78rem;font-family:inherit;cursor:pointer;padding:2px 0;color:inherit';
+  options.forEach(function(opt){
+    var o=document.createElement('option'); o.value=opt; o.textContent=opt;
+    if(opt===cur) o.selected=true;
+    sel.appendChild(o);
+  });
+  sel.addEventListener('change',function(){
+    var tb=td.closest('tbody'); if(tb) nt27SaveTable(tb,'sp_liste');
+  });
+  td.appendChild(sel);
+}
+
+function spConvertToSelects(){
+  var tbody=document.querySelector('#spTbl tbody'); if(!tbody) return;
+  var stufeOpts=['🥇 Gold','🥈 Silber','🥉 Bronze','🤝 Kooperationspartner'];
+  var statusOpts=['❓ Angefragt','🔄 Verhandlung','✅ Bestätigt','❌ Abgesagt'];
+  Array.from(tbody.rows).forEach(function(row){
+    spMakeSelectCell(row.cells[3],stufeOpts);
+    spMakeSelectCell(row.cells[7],statusOpts);
+  });
 }
 
 function spSpeichern(btn){
