@@ -960,14 +960,14 @@ tr[draggable="true"]{cursor:default}
     <div class="panel">
       <div class="panel-head">🎟 Ticketkategorien</div>
       <div class="panel-body" style="padding:0">
-        <table class="tbl">
+        <table class="tbl" id="ticketsKatTbl" style="width:100%">
           <thead><tr><th>Kategorie</th><th>Preis</th><th>Kapaz.</th><th>Verkauft</th><th>Frei</th><th>Einnahmen</th></tr></thead>
           <tbody>
-            <tr><td><strong>Brauchtumsabend Sa. Abend</strong></td><td>32 €</td><td>1.000</td><td>612</td><td>388</td><td>19.584 €</td></tr>
-            <tr><td><strong>VIP Zunftmeister (Fr.)</strong></td><td>0 €</td><td>80</td><td>68</td><td>12</td><td>—</td></tr>
-            <tr><td><strong>Kindernachmittag Sa. (Kinder)</strong></td><td>3 €</td><td>200</td><td>142</td><td>58</td><td>426 €</td></tr>
-            <tr><td><strong>Kindernachmittag Sa. (Erwachsene)</strong></td><td>6 €</td><td>400</td><td>298</td><td>102</td><td>1.788 €</td></tr>
-            <tr><td><strong>Festzelt-Nachfeier So.</strong></td><td>Frei</td><td>unbegrenzt</td><td>—</td><td>—</td><td>—</td></tr>
+            <tr><td>Brauchtumsabend Sa. Abend</td><td>32 €</td><td>1.000</td><td>612</td><td>388</td><td>19.584 €</td></tr>
+            <tr><td>VIP Zunftmeister (Fr.)</td><td>0 €</td><td>80</td><td>68</td><td>12</td><td>—</td></tr>
+            <tr><td>Kindernachmittag Sa. (Kinder)</td><td>3 €</td><td>200</td><td>142</td><td>58</td><td>426 €</td></tr>
+            <tr><td>Kindernachmittag Sa. (Erwachsene)</td><td>6 €</td><td>400</td><td>298</td><td>102</td><td>1.788 €</td></tr>
+            <tr><td>Festzelt-Nachfeier So.</td><td>Frei</td><td>unbegrenzt</td><td>—</td><td>—</td><td>—</td></tr>
           </tbody>
         </table>
       </div>
@@ -981,14 +981,14 @@ tr[draggable="true"]{cursor:default}
   <div class="panel" style="margin-top:20px">
     <div class="panel-head">🔍 Einlasskontrolle – Scan-Log (Brauchtumsabend Reithalle)</div>
     <div class="panel-body" style="padding:0">
-      <table class="tbl">
+      <table class="tbl" id="ticketsEinlassTbl" style="width:100%">
         <thead><tr><th>Uhrzeit</th><th>Ticket-Nr.</th><th>Kategorie</th><th>Zunft</th><th>Status</th></tr></thead>
         <tbody>
-          <tr><td>20:02</td><td>#1042</td><td>Brauchtumsabend</td><td>Narrenzunft Meßkirch</td><td><span class="pill pill-green">✅ Einlass</span></td></tr>
-          <tr><td>20:03</td><td>#0881</td><td>VIP Zunftmeister</td><td>Gauchenzunft Mühlheim</td><td><span class="pill pill-green">✅ Einlass</span></td></tr>
-          <tr><td>20:05</td><td>#0442</td><td>Brauchtumsabend</td><td>Sumpfnarren Krauchenwies</td><td><span class="pill pill-green">✅ Einlass</span></td></tr>
-          <tr><td>20:08</td><td>#1203</td><td>Brauchtumsabend</td><td>Gast</td><td><span class="pill pill-red">❌ Ungültig</span></td></tr>
-          <tr><td>20:09</td><td>#0991</td><td>Brauchtumsabend</td><td>Hemdglunkerzunft</td><td><span class="pill pill-green">✅ Einlass</span></td></tr>
+          <tr><td>20:02</td><td>#1042</td><td>Brauchtumsabend</td><td>Narrenzunft Meßkirch</td><td>✅ Einlass</td></tr>
+          <tr><td>20:03</td><td>#0881</td><td>VIP Zunftmeister</td><td>Gauchenzunft Mühlheim</td><td>✅ Einlass</td></tr>
+          <tr><td>20:05</td><td>#0442</td><td>Brauchtumsabend</td><td>Sumpfnarren Krauchenwies</td><td>✅ Einlass</td></tr>
+          <tr><td>20:08</td><td>#1203</td><td>Brauchtumsabend</td><td>Gast</td><td>❌ Ungültig</td></tr>
+          <tr><td>20:09</td><td>#0991</td><td>Brauchtumsabend</td><td>Hemdglunkerzunft</td><td>✅ Einlass</td></tr>
         </tbody>
       </table>
     </div>
@@ -1011,7 +1011,7 @@ tr[draggable="true"]{cursor:default}
     <div class="panel">
       <div class="panel-head">🏆 Hauptpreise</div>
       <div class="panel-body">
-        <div class="preis-grid">
+        <div class="preis-grid" id="tombolaPreisGrid">
           <div class="preis-card" style="border-top-color:#ffd700"><div class="preis-icon">🚲</div><div class="preis-name">1. Preis: E-Bike</div><div class="preis-val">Wert: 2.200 €</div></div>
           <div class="preis-card" style="border-top-color:#c0c0c0"><div class="preis-icon">🍳</div><div class="preis-name">2. Preis: Küchenmaschine</div><div class="preis-val">Wert: 650 €</div></div>
           <div class="preis-card" style="border-top-color:#cd7f32"><div class="preis-icon">🛒</div><div class="preis-name">3. Preis: Einkaufsgutschein</div><div class="preis-val">Wert: 300 €</div></div>
@@ -1027,12 +1027,15 @@ tr[draggable="true"]{cursor:default}
       <div class="panel-head">📊 Los-Verkauf nach Tag</div>
       <div class="panel-body">
         <div class="chart-wrap"><canvas id="chartTombola"></canvas></div>
-        <div style="margin-top:14px;font-size:.82rem">
-          <div class="fin-row"><span>Los-Verkauf Freitag Abend</span><span class="fin-amt-pos">+540 Lose</span></div>
-          <div class="fin-row"><span>Los-Verkauf Samstag Kindernachmittag</span><span class="fin-amt-pos">+890 Lose</span></div>
-          <div class="fin-row"><span>Los-Verkauf Brauchtumsabend</span><span class="fin-amt-pos">+710 Lose</span></div>
-          <div class="fin-row"><span>Noch verkäuflich</span><span style="color:#999">860 Lose</span></div>
-        </div>
+        <table class="tbl" id="tombolaVerkaufTbl" style="width:100%;margin-top:14px">
+          <thead><tr><th>Verkaufszeitraum</th><th style="text-align:right">Lose</th></tr></thead>
+          <tbody>
+            <tr><td>Los-Verkauf Freitag Abend</td><td style="text-align:right">+540</td></tr>
+            <tr><td>Los-Verkauf Samstag Kindernachmittag</td><td style="text-align:right">+890</td></tr>
+            <tr><td>Los-Verkauf Brauchtumsabend</td><td style="text-align:right">+710</td></tr>
+            <tr><td>Noch verkäuflich</td><td style="text-align:right">860</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -3099,6 +3102,8 @@ function show(id, btn) {
   if (id === 'finanzen'   && !window._nt27finanzen)   { window._nt27finanzen   = true; nt27InitFinanzen(); }
   if (id === 'programm'   && !window._nt27programm)   { window._nt27programm   = true; nt27InitProgramm(); }
   if (id === 'unterkunft' && !window._nt27unterkunft) { window._nt27unterkunft = true; nt27InitUnterkunft(); }
+  if (id === 'tickets'    && !window._nt27tickets)    { window._nt27tickets    = true; nt27InitTickets(); }
+  if (id === 'tombola'    && !window._nt27tombola)    { window._nt27tombola    = true; nt27InitTombola(); }
 }
 
 // ── Chart: Anmeldungsverlauf ─────────────────────────────────────────────────
@@ -4129,6 +4134,109 @@ function nt27SaveTable(tbody, saveKey){
   Array.from(clone.rows).forEach(function(r){ r.style.display = ''; });
   localStorage.setItem('nt27_t_'+saveKey, clone.innerHTML);
   nt27Flash();
+}
+
+// ── Tickets: Inline-Edit ─────────────────────────────────────────
+function nt27InitTickets(){
+  var sec=document.getElementById('tickets');
+  if(!sec) return;
+
+  // Section-Title-Span editierbar
+  var span=sec.querySelector('.section-title span');
+  if(span){ span.contentEditable='true'; span.title='Klicken zum Bearbeiten';
+    span.addEventListener('blur',function(){ localStorage.setItem('nt27_tickets_span',span.textContent); nt27Flash(); });
+    var ss=localStorage.getItem('nt27_tickets_span'); if(ss) span.textContent=ss; }
+
+  // Card-Vals editierbar
+  sec.querySelectorAll('.card-val').forEach(function(el,i){
+    var key='nt27_tickets_cv_'+i;
+    var sv=localStorage.getItem(key); if(sv) el.textContent=sv;
+    el.contentEditable='true'; el.title='Klicken zum Bearbeiten';
+    el.addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); this.blur(); } });
+    el.addEventListener('blur',function(){ localStorage.setItem(key,el.textContent); nt27Flash(); });
+  });
+
+  // Ticketkategorien-Tabelle
+  nt27InitTable('ticketsKatTbl','tickets_kat',{});
+
+  // Einlasskontrolle-Tabelle
+  nt27InitTable('ticketsEinlassTbl','tickets_einlass',{});
+}
+
+// ── Tombola: Inline-Edit ─────────────────────────────────────────
+function nt27InitTombola(){
+  var sec=document.getElementById('tombola');
+  if(!sec) return;
+
+  // Section-Title-Span editierbar
+  var span=sec.querySelector('.section-title span');
+  if(span){ span.contentEditable='true'; span.title='Klicken zum Bearbeiten';
+    span.addEventListener('blur',function(){ localStorage.setItem('nt27_tombola_span',span.textContent); nt27Flash(); });
+    var ss=localStorage.getItem('nt27_tombola_span'); if(ss) span.textContent=ss; }
+
+  // Card-Vals editierbar
+  sec.querySelectorAll('.card-val').forEach(function(el,i){
+    var key='nt27_tombola_cv_'+i;
+    var sv=localStorage.getItem(key); if(sv) el.textContent=sv;
+    el.contentEditable='true'; el.title='Klicken zum Bearbeiten';
+    el.addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); this.blur(); } });
+    el.addEventListener('blur',function(){ localStorage.setItem(key,el.textContent); nt27Flash(); });
+  });
+
+  // Preis-Grid: Karten editierbar + Löschen + Hinzufügen
+  var grid=document.getElementById('tombolaPreisGrid');
+  if(grid){
+    var savePreise=function(){
+      var clone=grid.cloneNode(true);
+      clone.querySelectorAll('.nt27-preis-del').forEach(function(b){ b.remove(); });
+      localStorage.setItem('nt27_tombola_preise', clone.innerHTML);
+      nt27Flash();
+    };
+    var bindPreisCard=function(card){
+      // Felder editierbar
+      ['.preis-icon','.preis-name','.preis-val'].forEach(function(sel){
+        var el=card.querySelector(sel); if(!el) return;
+        el.contentEditable='true'; el.title='Klicken zum Bearbeiten';
+        el.addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); this.blur(); } });
+        el.addEventListener('blur', savePreise);
+      });
+      // Löschen-Button
+      if(!card.querySelector('.nt27-preis-del')){
+        var del=document.createElement('button');
+        del.className='nt27-preis-del';
+        del.innerHTML='✕';
+        del.title='Preis löschen';
+        del.style.cssText='position:absolute;top:4px;right:4px;border:none;background:transparent;color:#c00;font-size:.7rem;cursor:pointer;opacity:.4;padding:2px 4px;border-radius:3px;line-height:1';
+        del.onmouseenter=function(){ del.style.opacity='1'; del.style.background='#fdd'; };
+        del.onmouseleave=function(){ del.style.opacity='.4'; del.style.background='transparent'; };
+        del.onclick=function(e){ e.preventDefault(); e.stopPropagation(); card.remove(); savePreise(); };
+        card.style.position='relative';
+        card.appendChild(del);
+      }
+    };
+    // Restore saved
+    var savedPreise=localStorage.getItem('nt27_tombola_preise');
+    if(savedPreise){ grid.innerHTML=savedPreise; }
+    // Bind alle Karten
+    grid.querySelectorAll('.preis-card').forEach(bindPreisCard);
+    // "Neuen Preis" Button
+    var addBtn=document.createElement('button');
+    addBtn.className='btn btn-outline nt27-add-btn';
+    addBtn.innerHTML='➕ Neuen Preis hinzufügen';
+    addBtn.style.cssText='margin-top:12px;width:100%';
+    addBtn.onclick=function(){
+      var card=document.createElement('div');
+      card.className='preis-card';
+      card.innerHTML='<div class="preis-icon">🏆</div><div class="preis-name">Neuer Preis</div><div class="preis-val">Wert: 0 €</div>';
+      grid.appendChild(card);
+      bindPreisCard(card);
+      savePreise();
+    };
+    grid.parentNode.insertBefore(addBtn, grid.nextSibling);
+  }
+
+  // Los-Verkauf Tabelle
+  nt27InitTable('tombolaVerkaufTbl','tombola_verkauf',{});
 }
 
 // ── Finanzen: Inline-Edit + Zeilen hinzufügen ───────────────────
