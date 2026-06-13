@@ -1,69 +1,68 @@
-# Narrentreffen 2027 – Planungs-Mockup
+# Narrentreffen 2027 – Planungs-App
 **Binkerzunft Boll e.V. · Sauldorf-Boll · 5.–7. Februar 2027**
+
+🌐 **Live:** https://wistefa.github.io/narrentreffen-2027/
 
 ---
 
 ## Was ist das?
 
-Eine interaktive Planungshilfe für das Narrentreffen als **einzelne HTML-Datei** – kein Server, keine Installation, kein Internet nötig.
+Eine vollständig interaktive **Planungs-App** für das Narrentreffen als einzelne HTML-Datei.  
+Kein Server, keine Installation, kein Internet nötig (außer für Chart.js-Diagramme).
 
-Die Datei kann einfach per E-Mail, WhatsApp oder USB-Stick weitergegeben werden.
-
----
-
-## Starten
-
-Datei `Narrentreffen-2027-Mockup.html` im Browser öffnen (Chrome oder Firefox empfohlen).
+Alle Inhalte sind **direkt im Browser editierbar** – Klick auf einen Wert, tippen, fertig.  
+Alles wird automatisch im Browser gespeichert (localStorage) und überlebt einen Reload.
 
 ---
 
-## Bereiche im Überblick
+## Tabs im Überblick
 
 | Tab | Inhalt |
 |-----|--------|
-| 📊 **Dashboard** | Gesamtstatus, Fortschrittsbalken, Zeitplan T-Minus |
-| 📋 **Zunftanmeldung** | Liste der 50 NVH-B Zünfte, Anmeldestatus, Filter nach Landschaft |
-| 🎭 **Umzug** | Aufstellungsreihenfolge der Zünfte, Positionsnummern, Streckenlänge 2,2 km |
+| 📊 **Dashboard** | Gesamtstatus, Fortschrittsbalken, T-Minus Zeitplan |
+| 📋 **Zunftanmeldung** | 50 NVH-B Zünfte, Anmeldestatus, Aufstellungsplan |
+| 🎭 **Umzug** | Reihenfolge, Positionsnummern, 2,2 km Strecke |
 | 📅 **Programm** | Detailprogramm Fr–So mit allen Veranstaltungen |
 | 🏨 **Unterkunft** | Quartierplan, Belegung, Anfahrt |
 | 🎟 **Tickets** | Verkaufsübersicht, Preiskategorien, Auslastung |
 | 🎰 **Tombola** | Losverkauf, Preisübersicht, Verlosungsplan |
 | 💶 **Finanzen** | Budget, Einnahmen/Ausgaben, Rücklagen |
-| 🙋 **Helfer** | Schichtplanung (s. unten), Bereichsübersicht, Anmeldung |
+| 🙋 **Helfer** | Schichtplanung, Drag & Drop, Helfer-Karten, CSV-Export |
 | 🚌 **Logistik** | Parkplätze, Shuttle, Infrastruktur, Sicherheit |
-| 🍺 **Narrenstände** | Standliste entlang der Umzugsstrecke, WC/Müll-Punkte |
+| 🍺 **Narrenstände** | Standliste, WC/Müll-Punkte |
 | 📨 **Kommunikation** | Briefvorlagen, E-Mail-Status, Pressemitteilungen |
-| 📞 **Kontakte** | Telefonliste aller Ansprechpartner, Export als CSV |
-| 🏟 **Reithalle Setup** | Aufbauplan, Ausstattungslisten, Timeline, Budget 24.190 € |
-| 🏅 **ZM-Empfang** | Saalplan Gemeindehalle, Bewirtungsplan, Programm-Ablauf |
+| 📞 **Kontakte** | Telefonlisten, Suche, Gruppen-Filter |
+| 🏟 **Reithalle Setup** | Aufbauplan, Ausstattungslisten, Zeitplan, Budget |
+| 🏅 **ZM-Empfang** | Saalplan Gemeindehalle, Bewirtungsplan, Programm |
+| 💛 **Sponsoren** | Sponsorenpakete, CRUD-Liste, Leistungsmatrix, Budget |
 
 ---
 
-## Helfer-Schichtplanung
+## Editierbarkeit
 
-Der **🙋 Helfer**-Tab ist in 5 Unter-Bereiche gegliedert:
+**Alles ist editierbar** – einfach draufklicken:
 
-### 📋 Übersicht
-Aktuelle Besetzungsstatistik mit der Schichtmatrix (12 Bereiche × 3 Tage) und Bereichssteckbriefen.
+- Alle Tabellen: Zellen direkt bearbeiten, Zeilen löschen (✕), neue Zeilen hinzufügen (➕)
+- Tabellen mit Drag & Drop: Reihenfolge per ⠿-Handle verschieben
+- Alle Texte, Kennzahlen-Karten, Alerts und Info-Boxen per Klick bearbeitbar
+- Aufbau-Zeitpläne und Offene-Punkte-Boxen sind freie Textbereiche
+- **Sponsorenliste:** Stufe und Status als Dropdown-Menü auswählbar
 
-### 📊 Schicht-Planer ← **das Herzstück**
-Interaktive Einteilung per **Drag & Drop**:
-- Links: Helfer-Pool mit allen verfügbaren Personen
-- Rechts: Grid aus 12 Bereichen × 8 Schichten
-- Helfer einfach von links in eine Zelle ziehen
-- Farbcode: 🔴 Unterbesetzt · 🟡 Teilbesetzt · 🟢 Vollbesetzt
-- **⚡ Auto-Assign**: füllt alle offenen Stellen automatisch nach Verfügbarkeit
-- **⬇ CSV-Export**: komplette Einteilung als Excel-Datei
-- Einteilung wird automatisch im Browser gespeichert (bleibt beim Neuladen erhalten)
+Änderungen werden sofort in `localStorage` gespeichert. Kein Speichern-Button nötig.
 
-### 👤 Helfer-Karten
-Persönliche Übersicht pro Helfer: zugewiesene Schichten, Einsatzbereiche, Gesamtstunden. Jede Karte kann einzeln ausgedruckt werden.
+---
 
-### 📈 Statistik
-Besetzungsgrad nach Bereich und nach Schicht, Stundenübersicht aller Helfer.
+## Daten sichern & teilen
 
-### ➕ Anmeldung
-Formular zur Helfer-Neuanmeldung + Liste der bereits registrierten Helfer.
+| Aktion | Wo |
+|--------|-----|
+| **Backup exportieren** | Dashboard → „Daten exportieren" → JSON-Datei |
+| **Backup importieren** | Dashboard → „Importieren" → JSON-Datei auswählen |
+| **Reset** | Dashboard → „Alle Daten zurücksetzen" |
+
+Beim Import werden nur Schlüssel mit dem Präfix `nt27_` oder `sp_` akzeptiert.
+
+Für gemeinsames Arbeiten: nach Änderungen JSON-Backup exportieren und an Kollegen schicken.
 
 ---
 
@@ -72,39 +71,35 @@ Formular zur Helfer-Neuanmeldung + Liste der bereits registrierten Helfer.
 | Bereich | Status |
 |---------|--------|
 | 50 Zünfte (NVH-B) | ✅ echte Namen und Landschaften |
-| Veranstaltungsorte | ✅ Reithalle (3.000 P.), Zelt (1.500 P.), Gemeindehalle (250 P.) |
+| Veranstaltungsorte | ✅ Reithalle, Zelt, Gemeindehalle |
 | Umzugsstrecke | ✅ 2.200 m mit WC- und Müllpunkten |
-| Helfer-Stammdaten (38 Personen) | ⚠ Demo-Daten, bitte ersetzen |
+| Sponsorenliste | ⚠ Demo-Daten, bitte ersetzen |
+| Helfer-Stammdaten | ⚠ Demo-Daten, bitte ersetzen |
 | Finanzzahlen | ⚠ Schätzwerte, bitte aktualisieren |
 | Kontaktdaten | ⚠ Beispieldaten, bitte ergänzen |
 
 ---
 
-## Daten speichern
-
-Die Datei selbst speichert **nichts dauerhaft** – sie hat keinen Server im Hintergrund.
-
-- **Schichteinteilungen** (Drag & Drop) werden im Browser-Speicher (localStorage) des jeweiligen Computers gesichert
-- Alle anderen Eingaben (Formulare, Checkboxen) gehen beim Schließen verloren
-- Empfehlung: Änderungen per **CSV-Export** sichern
-
-Für gemeinsames Arbeiten muss die Datei nach Änderungen immer neu weitergegeben werden.
-
----
-
-## Teilen
-
-Die HTML-Datei ist vollständig eigenständig – einfach die Datei `Narrentreffen-2027-Mockup.html` verschicken. Keine weiteren Dateien notwendig.
-
----
-
 ## Technisches
 
-- Läuft lokal im Browser (Chrome, Firefox, Edge, Safari)
-- Kein Internet erforderlich (Chart.js wird einmalig von CDN geladen – falls offline, erscheinen keine Diagramme)
-- Funktioniert auf Windows, Mac und Linux
-- Datei ist ca. 600 KB groß
+- **Single File:** ~400 KB, alles in einer `index.html`
+- **Browser:** Chrome, Firefox, Edge, Safari (Chrome empfohlen)
+- **Persistenz:** localStorage im jeweiligen Browser
+- **Kein Internet** nötig (Chart.js wird von CDN geladen – offline: keine Diagramme)
+- **CSP:** Content-Security-Policy Meta-Tag aktiv (`object-src 'none'`, `base-uri 'self'`)
+- **Plattform:** Windows, Mac, Linux
 
 ---
 
-*Erstellt für Binkerzunft Boll e.V. · Stand: Juni 2026 · Schlachtruf: BIEN-STICH!* 🐝
+## Deployment
+
+GitHub Pages: Push nach `main` → live unter https://wistefa.github.io/narrentreffen-2027/
+
+```bash
+# Lokales Deploy-Script (Python, kein git nötig):
+python3 deploy.py   # nutzt macOS Keychain für GitHub-Token
+```
+
+---
+
+*Erstellt für Binkerzunft Boll e.V. · Stand: Juni 2026 · BIEN-STICH! 🐝*
