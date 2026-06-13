@@ -505,7 +505,13 @@ tr[draggable="true"]{cursor:default}
   <div class="panel" style="margin-top:20px" id="aufstellungsplan">
     <div class="panel-head">
       📋 Offizieller Aufstellungsplan
-      <div style="margin-left:auto;display:flex;gap:8px">
+      <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+        <label style="font-size:.75rem;font-weight:400;color:#bbb;white-space:nowrap">⏱ Abstand:
+          <input id="zugIntervall" type="number" min="1" max="15" value="3"
+            style="width:40px;padding:2px 5px;border-radius:4px;border:1px solid #555;background:#2a2a2a;color:#fff;font-size:.78rem;text-align:center"
+            title="Minuten zwischen den Gruppen"
+            oninput="localStorage.setItem('nt27_intervall',this.value)"> Min.
+        </label>
         <button class="btn btn-sm btn-outline" style="color:white;border-color:#555" onclick="window.print()">🖨 Drucken</button>
         <div class="panel-head badge">28 Gruppen · Start 13:30</div>
       </div>
@@ -3019,6 +3025,8 @@ function show(id, btn) {
     if (!window._nt27umzug) { window._nt27umzug = true; nt27InitTable('zugTbl', 'umzug', {skipNr:true, renumber:true}); }
     nt27InitMapUpload();
     nt27RenderZunftPool();
+    var _iv = document.getElementById('zugIntervall');
+    if (_iv) { var _saved = localStorage.getItem('nt27_intervall'); if (_saved) _iv.value = _saved; }
   }
   if (id === 'anmeldung' && !window._nt27anmeldung) {
     window._nt27anmeldung = true;
@@ -4286,6 +4294,8 @@ function nt27RenderZunftPool() {
 }
 
 function nt27CalcNextTime(tbody) {
+  var intervall = parseInt(document.getElementById('zugIntervall')?.value || localStorage.getItem('nt27_intervall') || 3);
+  if (!intervall || intervall < 1) intervall = 3;
   var hasHandle = !!tbody.querySelector('.nt27-handle');
   var tzIdx = hasHandle ? 6 : 5;
   var rows = Array.from(tbody.rows).filter(function(r){ return !r.querySelector('td[colspan]'); });
@@ -4294,7 +4304,7 @@ function nt27CalcNextTime(tbody) {
     if (!cell) continue;
     var m = cell.textContent.trim().match(/(\d{1,2}):(\d{2})/);
     if (m) {
-      var min = parseInt(m[2]) + 3;
+      var min = parseInt(m[2]) + intervall;
       var h = parseInt(m[1]) + Math.floor(min / 60);
       min = min % 60;
       return h + ':' + (min < 10 ? '0' : '') + min;
