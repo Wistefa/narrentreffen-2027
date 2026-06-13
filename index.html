@@ -4256,7 +4256,7 @@ function nt27InitHelfer(){
     addKBtn.onclick=function(){
       var kcard=document.createElement('div');
       kcard.className='kcard';
-      kcard.innerHTML='<div class="kcard-title">Neuer Bereich</div><div class="kcard-meta">Aufgaben und Besetzung…</div>';
+      kcard.innerHTML='<div class="kcard-title"></div><div class="kcard-meta"></div>';
       kgrid.appendChild(kcard);
       bindKcard(kcard);
       saveKcards();
@@ -4377,7 +4377,7 @@ function nt27InitTombola(){
     addBtn.onclick=function(){
       var card=document.createElement('div');
       card.className='preis-card';
-      card.innerHTML='<div class="preis-icon">🏆</div><div class="preis-name">Neuer Preis</div><div class="preis-val">Wert: 0 €</div>';
+      card.innerHTML='<div class="preis-icon">🏆</div><div class="preis-name"></div><div class="preis-val"></div>';
       grid.appendChild(card);
       bindPreisCard(card);
       savePreise();
