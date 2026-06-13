@@ -4930,7 +4930,8 @@ function nt27InitSponsoren(){
 
 function spMakeSelectCell(td, options){
   if(!td) return;
-  var cur=td.querySelector('select')?td.querySelector('select').value:td.textContent.trim();
+  var existing=td.querySelector('select');
+  var cur=existing?existing.value:td.textContent.trim();
   td.removeAttribute('contenteditable'); td.title=''; td.innerHTML='';
   var sel=document.createElement('select');
   sel.style.cssText='width:100%;border:none;background:transparent;font-size:.78rem;font-family:inherit;cursor:pointer;padding:2px 0;color:inherit';
@@ -4972,9 +4973,8 @@ function spSpeichern(btn){
 
   var tbody=document.querySelector('#spTbl tbody');
   if(!tbody) return;
-  var nr=tbody.rows.length+1;
   var tr=document.createElement('tr');
-  tr.innerHTML='<td>'+nr+'</td><td>'+nt27Escape(firma)+'</td><td>'+nt27Escape(stufe)+'</td><td>'+nt27Escape(betrag)+'</td><td>'+nt27Escape(kname)+'</td><td>'+nt27Escape(kontakt)+'</td><td>'+nt27Escape(status)+'</td><td>'+nt27Escape(notiz)+'</td>';
+  tr.innerHTML='<td>?</td><td>'+nt27Escape(firma)+'</td><td>'+nt27Escape(stufe)+'</td><td>'+nt27Escape(betrag)+'</td><td>'+nt27Escape(kname)+'</td><td>'+nt27Escape(kontakt)+'</td><td>'+nt27Escape(status)+'</td><td>'+nt27Escape(notiz)+'</td>';
   tbody.appendChild(tr);
   nt27BindRows(tbody,'sp_liste',{renumber:true});
   nt27RenumberRows(tbody);
