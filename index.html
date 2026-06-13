@@ -3940,13 +3940,19 @@ function nt27InitTable(tableId, saveKey, opts){
   var tbody=tbl.querySelector('tbody');
   if(!tbody) return;
 
-  // Add handle <th> to thead if not already present
+  // Add handle <th> and delete <th> to thead if not already present
   var thead=tbl.querySelector('thead tr');
   if(thead && !thead.querySelector('.nt27-th')){
     var th=document.createElement('th');
     th.className='nt27-th';
     th.style.cssText='width:18px;padding:2px 4px';
     thead.insertBefore(th,thead.firstChild);
+  }
+  if(thead && !thead.querySelector('.nt27-del-th')){
+    var thDel=document.createElement('th');
+    thDel.className='nt27-del-th';
+    thDel.style.cssText='width:28px;padding:2px 4px';
+    thead.appendChild(thDel);
   }
 
   // Restore saved tbody content
@@ -3985,7 +3991,7 @@ function nt27BindRows(tbody, saveKey, opts){
     Array.from(row.cells).forEach(function(td,i){
       if(i===0) return; // handle
       if(opts.skipNr && i===1) return; // Nr.
-      if(td.querySelector('.nt27-del-btn')) return; // last cell with del
+      if(td.classList.contains('nt27-del-td')) return; // del-Spalte nicht editierbar
       if(td.classList.contains('nt27-handle')) return;
       td.contentEditable='true';
       td.title='Klicken zum Bearbeiten';
@@ -3996,18 +4002,27 @@ function nt27BindRows(tbody, saveKey, opts){
       });
     });
 
-    // Delete button on last real cell
-    var lastTd=row.cells[row.cells.length-1];
-    if(lastTd && !lastTd.querySelector('.nt27-del-btn')){
+    // Delete button — eigene Zelle, nicht in contentEditable
+    if(!row.querySelector('.nt27-del-td')){
+      var delTd=document.createElement('td');
+      delTd.className='nt27-del-td';
+      delTd.style.cssText='width:28px;padding:2px 4px;text-align:center;vertical-align:middle';
       var delBtn=document.createElement('button');
       delBtn.className='nt27-del-btn';
       delBtn.innerHTML='✕';
       delBtn.title='Zeile löschen';
+      delBtn.onmousedown=function(e){ e.preventDefault(); e.stopPropagation(); };
       delBtn.onclick=function(e){
-        e.stopPropagation();
-        if(confirm('Diese Zeile löschen?')){row.remove();nt27SaveTable(tbody,saveKey);}
+        e.preventDefault(); e.stopPropagation();
+        if(confirm('Zeile löschen?')){
+          row.remove();
+          nt27SaveTable(tbody,saveKey);
+          if(opts&&opts.renumber) nt27RenumberRows(tbody);
+          if(typeof nt27RenderZunftPool==='function') nt27RenderZunftPool();
+        }
       };
-      lastTd.appendChild(delBtn);
+      delTd.appendChild(delBtn);
+      row.appendChild(delTd);
     }
 
     // Drag & Drop
