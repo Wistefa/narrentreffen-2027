@@ -1593,7 +1593,7 @@ tr[draggable="true"]{cursor:default}
     <div class="panel">
       <div class="panel-head">🚌 Shuttle-Busse & Nahverkehr</div>
       <div class="panel-body" style="padding:0">
-        <table class="tbl">
+        <table class="tbl" id="logistikShuttleTbl">
           <thead><tr><th>Linie</th><th>Route</th><th>Takt</th><th>Zeiten</th><th>Anbieter</th></tr></thead>
           <tbody>
             <tr><td><strong>S1</strong></td><td>Parkplatz P3 ↔ Festplatz</td><td>20 min</td><td>12–19 Uhr</td><td>Gemeinde Boll</td></tr>
@@ -1610,7 +1610,7 @@ tr[draggable="true"]{cursor:default}
     <div class="panel">
       <div class="panel-head">⚡ Infrastruktur & Technik</div>
       <div class="panel-body" style="padding:0">
-        <table class="tbl">
+        <table class="tbl" id="logistikInfraTbl">
           <thead><tr><th>Bereich</th><th>Lieferant</th><th>Status</th><th>Kosten</th></tr></thead>
           <tbody>
             <tr><td>Reithalle Boll (Miete)</td><td>Gemeinde Sauldorf</td><td><span class="pill pill-green">Bestätigt</span></td><td>3.500 €</td></tr>
@@ -3105,6 +3105,7 @@ function show(id, btn) {
   if (id === 'tickets'    && !window._nt27tickets)    { window._nt27tickets    = true; nt27InitTickets(); }
   if (id === 'tombola'    && !window._nt27tombola)    { window._nt27tombola    = true; nt27InitTombola(); }
   if (id === 'helfer'     && !window._nt27helfer)     { window._nt27helfer     = true; nt27InitHelfer(); }
+  if (id === 'logistik'  && !window._nt27logistik)   { window._nt27logistik   = true; nt27InitLogistik(); }
 }
 
 // ── Chart: Anmeldungsverlauf ─────────────────────────────────────────────────
@@ -4332,6 +4333,73 @@ function nt27InitTickets(){
 }
 
 // ── Tombola: Inline-Edit ─────────────────────────────────────────
+function nt27InitLogistik(){
+  var sec=document.getElementById('logistik');
+  if(!sec) return;
+
+  // 1. Parkplatzkonzept: name, capacity, subtitle per entry
+  var parkEntries=sec.querySelectorAll('.panel-body > div[style*="margin-bottom:14px"]');
+  parkEntries.forEach(function(entry,i){
+    var nameSpan=entry.querySelector('div > span:first-child');
+    var capSpan=entry.querySelector('div > span:last-child');
+    var subDiv=entry.querySelector('div[style*="color:#888"]');
+    [
+      {el:nameSpan, key:'nt27_logi_park_name_'+i},
+      {el:capSpan,  key:'nt27_logi_park_cap_'+i},
+      {el:subDiv,   key:'nt27_logi_park_sub_'+i},
+    ].forEach(function(item){
+      if(!item.el) return;
+      var sv=localStorage.getItem(item.key); if(sv!==null) item.el.textContent=sv;
+      item.el.contentEditable='true';
+      item.el.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();this.blur();}});
+      item.el.addEventListener('blur',(function(el,key){return function(){ localStorage.setItem(key,el.textContent); nt27Flash(); };})(item.el,item.key));
+    });
+  });
+
+  // 2. Alert-gold Banner (Shuttle-Hinweis im Parkplatzkonzept-Panel)
+  sec.querySelectorAll('.alert-gold').forEach(function(el,i){
+    var key='nt27_logi_alert_'+i;
+    var sv=localStorage.getItem(key); if(sv!==null) el.textContent=sv;
+    el.contentEditable='true';
+    el.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();this.blur();}});
+    el.addEventListener('blur',function(){ localStorage.setItem(key,el.textContent); nt27Flash(); });
+  });
+
+  // 3. Shuttle-Busse Tabelle
+  nt27InitTable('logistikShuttleTbl','logistik_shuttle',{});
+
+  // 4. Infrastruktur & Technik Tabelle
+  nt27InitTable('logistikInfraTbl','logistik_infra',{});
+
+  // 5. Sicherheit & Behörden fin-rows: linke Span (Name) + Pill-Span editierbar
+  var sicherheitPanel=null;
+  sec.querySelectorAll('.panel').forEach(function(p){
+    if(p.querySelector('.panel-head')&&p.querySelector('.panel-head').textContent.includes('Sicherheit')) sicherheitPanel=p;
+  });
+  if(sicherheitPanel){
+    var svRows=localStorage.getItem('nt27_logi_sicherheit');
+    if(svRows) sicherheitPanel.querySelector('.panel-body > div').innerHTML=svRows;
+    var saveRows=function(){
+      localStorage.setItem('nt27_logi_sicherheit', sicherheitPanel.querySelector('.panel-body > div').innerHTML);
+      nt27Flash();
+    };
+    sicherheitPanel.querySelectorAll('.fin-row').forEach(function(row){
+      var nameSpan=row.querySelector('span:first-child');
+      var pillSpan=row.querySelector('.pill');
+      if(nameSpan){
+        nameSpan.contentEditable='true';
+        nameSpan.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();this.blur();}});
+        nameSpan.addEventListener('blur',saveRows);
+      }
+      if(pillSpan){
+        pillSpan.contentEditable='true';
+        pillSpan.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();this.blur();}});
+        pillSpan.addEventListener('blur',saveRows);
+      }
+    });
+  }
+}
+
 function nt27InitTombola(){
   var sec=document.getElementById('tombola');
   if(!sec) return;
