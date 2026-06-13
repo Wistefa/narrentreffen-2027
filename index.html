@@ -4285,6 +4285,24 @@ function nt27RenderZunftPool() {
   body.innerHTML = html;
 }
 
+function nt27CalcNextTime(tbody) {
+  var hasHandle = !!tbody.querySelector('.nt27-handle');
+  var tzIdx = hasHandle ? 6 : 5;
+  var rows = Array.from(tbody.rows).filter(function(r){ return !r.querySelector('td[colspan]'); });
+  for (var i = rows.length - 1; i >= 0; i--) {
+    var cell = rows[i].cells[tzIdx];
+    if (!cell) continue;
+    var m = cell.textContent.trim().match(/(\d{1,2}):(\d{2})/);
+    if (m) {
+      var min = parseInt(m[2]) + 3;
+      var h = parseInt(m[1]) + Math.floor(min / 60);
+      min = min % 60;
+      return h + ':' + (min < 10 ? '0' : '') + min;
+    }
+  }
+  return '—';
+}
+
 function nt27AddToUmzug(name, ort, tn) {
   var tbody = document.querySelector('#zugTbl tbody');
   if (!tbody) return;
@@ -4292,6 +4310,7 @@ function nt27AddToUmzug(name, ort, tn) {
   var hasHandle = !!tbody.querySelector('.nt27-handle');
   var realRows  = Array.from(tbody.rows).filter(function(r){ return !r.querySelector('td[colspan]'); });
   var nr = realRows.length + 1;
+  var nextTime = nt27CalcNextTime(tbody);
 
   var tr = document.createElement('tr');
   tr.innerHTML =
@@ -4301,7 +4320,7 @@ function nt27AddToUmzug(name, ort, tn) {
     '<td>'+nt27Escape(ort)+'</td>' +
     '<td>—</td>' +
     '<td>'+nt27Escape(tn||'—')+'</td>' +
-    '<td>—</td>' +
+    '<td>'+nextTime+'</td>' +
     '<td>—</td>' +
     '<td style="color:#999;font-style:italic">Neu eingeplant</td>';
   tbody.appendChild(tr);
