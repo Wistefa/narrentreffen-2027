@@ -1919,7 +1919,7 @@ tr[draggable="true"]{cursor:default}
     <div class="panel">
       <div class="panel-head">🚻 WC-Stationen entlang der Strecke + Veranstaltungsorte</div>
       <div class="panel-body" style="padding:0">
-        <table class="tbl">
+        <table class="tbl" id="staeWcTbl">
           <thead><tr><th>Station</th><th>Position</th><th>Kabinen</th><th>Typ</th><th>Lieferant</th><th>Status</th></tr></thead>
           <tbody>
             <tr><td><strong>WC 1</strong></td><td>Start – Festplatz (0 m)</td><td>6</td><td>Mobiltoilettenwagen beleuchtet</td><td>Sanitär-Event GmbH</td><td><span class="pill pill-gold">Anfrage</span></td></tr>
@@ -1940,7 +1940,7 @@ tr[draggable="true"]{cursor:default}
     <div class="panel">
       <div class="panel-head">🗑 Müll-Stationen entlang der Strecke + Veranstaltungsorte</div>
       <div class="panel-body" style="padding:0">
-        <table class="tbl">
+        <table class="tbl" id="staeMuellTbl">
           <thead><tr><th>Station</th><th>Position</th><th>Behälter</th><th>Fraktionen</th><th>Status</th></tr></thead>
           <tbody>
             <tr><td><strong>M1</strong></td><td>Strecke 200 m</td><td>3 × 120 L</td><td>Restmüll · Glas · Pfand</td><td><span class="pill pill-gold">Ausstehend</span></td></tr>
@@ -1967,7 +1967,7 @@ tr[draggable="true"]{cursor:default}
     <div class="panel">
       <div class="panel-head">📋 Alle angemeldeten Stände <div class="panel-head badge">14 Stände</div></div>
       <div class="panel-body" style="padding:0;max-height:520px;overflow-y:auto">
-        <table class="tbl">
+        <table class="tbl" id="staeStandlisteTbl">
           <thead><tr><th>#</th><th>Verein / Gruppe</th><th>Position</th><th>Angebot</th><th>Breite</th><th>⚡</th><th>💧</th><th>Status</th></tr></thead>
           <tbody>
             <tr><td>1</td><td><strong>Feuerwehr Boll</strong></td><td>150 m</td><td>Grillwurst, Steaks, Bier</td><td>6 m</td><td>✅</td><td>✅</td><td><span class="pill pill-green">Bestätigt</span></td></tr>
@@ -2019,7 +2019,8 @@ tr[draggable="true"]{cursor:default}
           </div>
           <div class="form-group" style="grid-column:1/-1"><label>Bemerkungen</label><input placeholder="z.B. Eigenes Zelt, Kühlanhänger, etc."></div>
           <div class="form-group" style="grid-column:1/-1;margin-top:6px">
-            <button class="btn btn-primary" style="width:100%">✅ Stand anmelden</button>
+            <button class="btn btn-primary" style="width:100%" onclick="staeAnmelden(this)">✅ Stand anmelden</button>
+            <div id="stae-msg" style="margin-top:8px;font-size:.82rem"></div>
           </div>
         </div>
       </div>
@@ -3106,6 +3107,7 @@ function show(id, btn) {
   if (id === 'tombola'    && !window._nt27tombola)    { window._nt27tombola    = true; nt27InitTombola(); }
   if (id === 'helfer'     && !window._nt27helfer)     { window._nt27helfer     = true; nt27InitHelfer(); }
   if (id === 'logistik'  && !window._nt27logistik)   { window._nt27logistik   = true; nt27InitLogistik(); }
+  if (id === 'staende'   && !window._nt27staende)    { window._nt27staende    = true; nt27InitStaende(); }
 }
 
 // ── Chart: Anmeldungsverlauf ─────────────────────────────────────────────────
@@ -4333,6 +4335,148 @@ function nt27InitTickets(){
 }
 
 // ── Tombola: Inline-Edit ─────────────────────────────────────────
+function nt27InitStaende(){
+  var sec=document.getElementById('staende');
+  if(!sec) return;
+
+  // 1. Section-Title Span
+  var span=sec.querySelector('.section-title span');
+  if(span){
+    var sv=localStorage.getItem('nt27_stae_span'); if(sv!==null) span.textContent=sv;
+    span.contentEditable='true'; span.title='Klicken zum Bearbeiten';
+    span.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();this.blur();}});
+    span.addEventListener('blur',function(){ localStorage.setItem('nt27_stae_span',span.textContent); nt27Flash(); });
+  }
+
+  // 2. Alert-gold
+  var alertGold=sec.querySelector('.alert-gold');
+  if(alertGold){
+    var svg=localStorage.getItem('nt27_stae_alert_gold'); if(svg!==null) alertGold.innerHTML=svg;
+    alertGold.contentEditable='true';
+    alertGold.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();this.blur();}});
+    alertGold.addEventListener('blur',function(){ localStorage.setItem('nt27_stae_alert_gold',alertGold.innerHTML); nt27Flash(); });
+  }
+
+  // 3. Card-vals + Card-subs
+  sec.querySelectorAll('.card-val').forEach(function(el,i){
+    var key='nt27_stae_cv_'+i;
+    var sv=localStorage.getItem(key); if(sv!==null) el.textContent=sv;
+    el.contentEditable='true';
+    el.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();this.blur();}});
+    el.addEventListener('blur',function(){ localStorage.setItem(key,el.textContent); nt27Flash(); });
+  });
+  sec.querySelectorAll('.card-sub').forEach(function(el,i){
+    var key='nt27_stae_cs_'+i;
+    var sv=localStorage.getItem(key); if(sv!==null) el.textContent=sv;
+    el.contentEditable='true';
+    el.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();this.blur();}});
+    el.addEventListener('blur',function(){ localStorage.setItem(key,el.textContent); nt27Flash(); });
+  });
+
+  // 4. Stand-Marker Visualisierung (alle Texte editierbar, gesamte Viz gespeichert)
+  var vizWrap=sec.querySelector('[style*="min-width:700px"]');
+  if(vizWrap){
+    var svViz=localStorage.getItem('nt27_stae_viz');
+    if(svViz) vizWrap.innerHTML=svViz;
+    var saveViz=function(){ localStorage.setItem('nt27_stae_viz',vizWrap.innerHTML); nt27Flash(); };
+    vizWrap.querySelectorAll('.stand-marker div[style*="font-size"]').forEach(function(el){
+      if(el.children.length>0) return; // skip non-leaf
+      el.contentEditable='true';
+      el.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();this.blur();}});
+      el.addEventListener('blur',saveViz);
+    });
+  }
+
+  // 5. WC-Tabelle
+  nt27InitTable('staeWcTbl','stae_wc',{});
+
+  // 6. Müll-Tabelle
+  nt27InitTable('staeMuellTbl','stae_muell',{});
+
+  // 7. Alert-red
+  var alertRed=sec.querySelector('.alert-red');
+  if(alertRed){
+    var sar=localStorage.getItem('nt27_stae_alert_red'); if(sar!==null) alertRed.innerHTML=sar;
+    alertRed.contentEditable='true';
+    alertRed.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();this.blur();}});
+    alertRed.addEventListener('blur',function(){ localStorage.setItem('nt27_stae_alert_red',alertRed.innerHTML); nt27Flash(); });
+  }
+
+  // 8. Standliste-Tabelle
+  nt27InitTable('staeStandlisteTbl','stae_standliste',{renumber:true});
+
+  // Badge-Update für Standliste
+  var lTbl=document.getElementById('staeStandlisteTbl');
+  if(lTbl){
+    var updateBadge=function(){
+      var badge=sec.querySelector('.panel-head .badge');
+      if(badge){ badge.textContent=lTbl.querySelectorAll('tbody tr').length+' Stände'; }
+    };
+    new MutationObserver(updateBadge).observe(lTbl.tBodies[0],{childList:true});
+    updateBadge();
+  }
+
+  // 9. Infos für Standbetreiber – drei Text-Blöcke editierbar
+  sec.querySelectorAll('.grid3 > div').forEach(function(col,i){
+    var txtDiv=col.querySelector('div[style*="line-height"]');
+    if(!txtDiv) return;
+    var key='nt27_stae_info_'+i;
+    var sv=localStorage.getItem(key); if(sv!==null) txtDiv.innerHTML=sv;
+    txtDiv.contentEditable='true';
+    txtDiv.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();this.blur();}});
+    txtDiv.addEventListener('blur',function(){ localStorage.setItem(key,txtDiv.innerHTML); nt27Flash(); });
+  });
+}
+
+function staeAnmelden(btn){
+  var sec=document.getElementById('staende');
+  if(!sec) return;
+  var inputs=sec.querySelectorAll('.form-grid input');
+  var selects=sec.querySelectorAll('.form-grid select');
+  var verein=(inputs[0]||{}).value||'';
+  verein=verein.trim();
+  if(!verein){
+    var msg=document.getElementById('stae-msg');
+    if(msg){msg.textContent='⚠ Bitte Verein / Gruppe eingeben.';msg.style.cssText='color:#c00;font-weight:700';}
+    return;
+  }
+  var person=(inputs[1]||{}).value||'—';
+  var mobil=(inputs[2]||{}).value||'—';
+  var angebot=(inputs[3]||{}).value||'—';
+  var bemerk=(inputs[4]||{}).value||'';
+  var pos=selects[0]?selects[0].options[selects[0].selectedIndex].text:'—';
+  var breite=selects[1]?selects[1].value:'—';
+  var strom=selects[2]?(selects[2].value==='Nein'?'—':'✅'):'—';
+  var wasser=selects[3]?(selects[3].value==='Ja'?'✅':'—'):'—';
+
+  var tbody=document.querySelector('#staeStandlisteTbl tbody');
+  if(!tbody) return;
+  var tr=document.createElement('tr');
+  tr.innerHTML='<td></td>'+
+    '<td><strong>'+nt27Escape(verein)+'</strong></td>'+
+    '<td>'+nt27Escape(pos.split('(')[0].trim())+'</td>'+
+    '<td>'+nt27Escape(angebot)+'</td>'+
+    '<td>'+nt27Escape(breite)+'</td>'+
+    '<td>'+strom+'</td>'+
+    '<td>'+wasser+'</td>'+
+    '<td><span class="pill pill-gold">Ausstehend</span></td>';
+  tbody.appendChild(tr);
+  nt27BindRows(tbody,'stae_standliste',{renumber:true});
+  nt27SaveTable(tbody,'stae_standliste');
+  nt27RenumberRows(tbody);
+
+  // Felder leeren
+  sec.querySelectorAll('.form-grid input').forEach(function(i){i.value='';});
+  sec.querySelectorAll('.form-grid select').forEach(function(s){s.selectedIndex=0;});
+
+  var msg=document.getElementById('stae-msg');
+  if(msg){
+    msg.textContent='✅ '+verein+' wurde angemeldet!';
+    msg.style.cssText='color:var(--green);font-weight:700';
+    setTimeout(function(){if(msg)msg.textContent='';},4000);
+  }
+}
+
 function nt27InitLogistik(){
   var sec=document.getElementById('logistik');
   if(!sec) return;
