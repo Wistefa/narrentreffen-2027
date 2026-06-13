@@ -4507,7 +4507,9 @@ function nt27InitReithalle(){
   });
   if(budgetPanel){
     var grid2=budgetPanel.querySelector('.grid2');
-    var offeneDiv=grid2&&grid2.children[1]?grid2.children[1].firstElementChild:null;
+    // nt27InitTable inserts a button between the two columns, so filter for DIV children only
+    var offeneCol=grid2?Array.from(grid2.children).filter(function(c){return c.tagName==='DIV';}).pop():null;
+    var offeneDiv=offeneCol?offeneCol.firstElementChild:null;
     if(offeneDiv){
       var svo=localStorage.getItem('nt27_reit_offene'); if(svo!==null) offeneDiv.innerHTML=svo;
       offeneDiv.contentEditable='true';
@@ -4591,7 +4593,8 @@ function nt27InitZmempfang(){
   });
   if(budgetPanel){
     var grid2=budgetPanel.querySelector('.grid2');
-    var offeneDiv=grid2&&grid2.children[1]?grid2.children[1].firstElementChild:null;
+    var offeneCol=grid2?Array.from(grid2.children).filter(function(c){return c.tagName==='DIV';}).pop():null;
+    var offeneDiv=offeneCol?offeneCol.firstElementChild:null;
     if(offeneDiv){
       var svo=localStorage.getItem('nt27_zm_offene'); if(svo!==null) offeneDiv.innerHTML=svo;
       offeneDiv.contentEditable='true';
