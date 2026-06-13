@@ -4118,15 +4118,13 @@ function nt27AddRow(tbody, saveKey, cols, opts){
   var hTd=document.createElement('td'); hTd.className='nt27-handle'; hTd.innerHTML='⠿'; newRow.appendChild(hTd);
   for(var i=0;i<cols;i++){
     var td=document.createElement('td'); td.contentEditable='true';
-    td.style.cssText='color:#999;font-style:italic';
-    td.innerHTML='neu…';
     newRow.appendChild(td);
   }
   tbody.appendChild(newRow);
   nt27BindRows(tbody,saveKey,opts||{});
   nt27SaveTable(tbody,saveKey);
   var firstEdit=newRow.cells[1];
-  if(firstEdit){firstEdit.focus();firstEdit.innerHTML='';}
+  if(firstEdit) firstEdit.focus();
 }
 
 function nt27SaveTable(tbody, saveKey){
