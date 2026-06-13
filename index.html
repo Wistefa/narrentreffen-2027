@@ -4136,6 +4136,41 @@ function nt27SaveTable(tbody, saveKey){
   nt27Flash();
 }
 
+// Auto-Summen: sumMap = [[colIdx, targetId], ...]
+function nt27AutoSum(tblId, sumMap){
+  var tbl=document.getElementById(tblId);
+  if(!tbl||!tbl.tBodies[0]) return;
+  var tbody=tbl.tBodies[0];
+  var parseNum=function(txt){
+    // Remove thousands dots, convert comma→dot, strip non-numeric
+    var s=(txt||'').trim().replace(/\./g,'').replace(',','.').replace(/[^0-9.\-]/g,'');
+    var n=parseFloat(s);
+    return isNaN(n)?0:n;
+  };
+  var fmtNum=function(n){
+    if(Number.isInteger(n)) return n.toLocaleString('de-DE');
+    return n.toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2});
+  };
+  var recalc=function(){
+    sumMap.forEach(function(pair){
+      var colIdx=pair[0], targetId=pair[1];
+      var target=document.getElementById(targetId);
+      if(!target) return;
+      var sum=0;
+      Array.from(tbody.rows).forEach(function(row){
+        var cell=row.cells[colIdx];
+        if(!cell) return;
+        if(cell.classList.contains('nt27-del-td')||cell.classList.contains('nt27-handle')) return;
+        sum+=parseNum(cell.textContent);
+      });
+      target.textContent=fmtNum(sum);
+    });
+  };
+  tbody.addEventListener('focusout',function(){ setTimeout(recalc,50); });
+  new MutationObserver(recalc).observe(tbody,{childList:true});
+  recalc();
+}
+
 // ── Tickets: Inline-Edit ─────────────────────────────────────────
 function nt27InitTickets(){
   var sec=document.getElementById('tickets');
@@ -4268,24 +4303,20 @@ function nt27InitFinanzen(){
   if(document.getElementById('finEinnTbl')&&!window._nt27finEinn){
     window._nt27finEinn=true;
     nt27InitTable('finEinnTbl','fin_einn',{});
+    // Spaltenindex nach nt27BindRows: 0=handle,1=Position,2=Plan,3=Ist,4=del
+    nt27AutoSum('finEinnTbl',[[2,'finEinnSumPlan'],[3,'finEinnSumIst']]);
   }
   if(document.getElementById('finAusgTbl')&&!window._nt27finAusg){
     window._nt27finAusg=true;
     nt27InitTable('finAusgTbl','fin_ausg',{});
+    nt27AutoSum('finAusgTbl',[[2,'finAusgSumPlan'],[3,'finAusgSumIst']]);
   }
   if(document.getElementById('barkasseTbl')&&!window._nt27barkasse){
     window._nt27barkasse=true;
     nt27InitTable('barkasseTbl','barkasse',{});
+    // 0=handle,1=Station,2=Person,3=Ausgegeben,4=Zurück,5=Status,6=Notiz,7=del
+    nt27AutoSum('barkasseTbl',[[3,'barkasseSumAus'],[4,'barkasseSumZurueck']]);
   }
-  // Summe-Zeilen manuell editierbar machen
-  ['finEinnSumPlan','finEinnSumIst','finAusgSumPlan','finAusgSumIst','barkasseSumAus','barkasseSumZurueck'].forEach(function(id){
-    var el=document.getElementById(id);
-    if(!el||el.contentEditable==='true') return;
-    el.contentEditable='true';
-    el.title='Klicken zum Bearbeiten';
-    el.addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); this.blur(); } });
-    el.addEventListener('blur',function(){ nt27Flash(); });
-  });
 }
 
 // ── Programm: Inline-Edit + Drag & Drop ─────────────────────────
