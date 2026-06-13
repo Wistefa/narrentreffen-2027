@@ -4170,22 +4170,19 @@ function nt27InitProgramm(){
 
   // Drag-and-drop state
   var dragSrc=null;
-  var dragFromHandle=false;
-  if(!window._nt27progMU){ window._nt27progMU=true; document.addEventListener('mouseup',function(){ dragFromHandle=false; }); }
 
   function bindDrag(item){
     if(item.querySelector('.nt27-prog-handle')) return;
     var h=document.createElement('span');
     h.className='nt27-prog-handle'; h.innerHTML='⠿'; h.title='Verschieben (ziehen)';
-    h.addEventListener('mousedown',function(e){ e.stopPropagation(); dragFromHandle=true; });
     item.insertBefore(h,item.firstChild);
 
     item.draggable=true;
     item.addEventListener('dragstart',function(e){
-      if(!dragFromHandle){ e.preventDefault(); return; }
-      dragSrc=item; dragFromHandle=false;
+      dragSrc=item;
       item.classList.add('nt27-dragging');
       e.dataTransfer.effectAllowed='move';
+      e.dataTransfer.setData('text/plain','nt27sched');
     });
     item.addEventListener('dragend',function(){
       dragSrc=null; item.classList.remove('nt27-dragging');
@@ -4193,12 +4190,13 @@ function nt27InitProgramm(){
     });
     item.addEventListener('dragover',function(e){
       if(!dragSrc||dragSrc===item) return;
-      e.preventDefault();
+      e.preventDefault(); e.dataTransfer.dropEffect='move';
       prog.querySelectorAll('.sched-item').forEach(function(i){ i.classList.remove('nt27-drag-over'); });
       item.classList.add('nt27-drag-over');
     });
+    item.addEventListener('dragleave',function(){ item.classList.remove('nt27-drag-over'); });
     item.addEventListener('drop',function(e){
-      e.preventDefault();
+      e.preventDefault(); e.stopPropagation();
       if(!dragSrc||dragSrc===item) return;
       item.classList.remove('nt27-drag-over');
       var r=item.getBoundingClientRect();
