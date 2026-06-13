@@ -334,20 +334,20 @@ tr[draggable="true"]{cursor:default}
     <div class="panel">
       <div class="panel-head">🐝 Neue Zunft anmelden</div>
       <div class="panel-body">
-        <div class="form-grid" style="gap:10px">
-          <div class="form-group" style="grid-column:1/-1"><label>Zunftname *</label><input placeholder="z.B. Narrenzunft Aasen e.V."></div>
-          <div class="form-group"><label>Zunftmeister / Kontaktperson</label><input placeholder="Vorname Nachname"></div>
-          <div class="form-group"><label>E-Mail</label><input type="email" placeholder="zunftmeister@..."></div>
-          <div class="form-group"><label>Telefon</label><input placeholder="+49 ..."></div>
-          <div class="form-group"><label>Ort / Region</label><input placeholder="Stadt"></div>
+        <div class="form-grid" style="gap:10px" id="zf-form">
+          <div class="form-group" style="grid-column:1/-1"><label>Zunftname *</label><input id="zf-name" placeholder="z.B. Narrenzunft Aasen e.V."></div>
+          <div class="form-group"><label>Zunftmeister / Kontaktperson</label><input id="zf-zm" placeholder="Vorname Nachname"></div>
+          <div class="form-group"><label>E-Mail</label><input id="zf-email" type="email" placeholder="zunftmeister@..."></div>
+          <div class="form-group"><label>Telefon</label><input id="zf-tel" placeholder="+49 ..."></div>
+          <div class="form-group"><label>Ort / Region</label><input id="zf-ort" placeholder="Stadt"></div>
           <div class="form-group"><label>Mitgliedsvereinigung</label>
-            <select><option>VSAN</option><option>NVH-B</option><option>Schwäb. Narrenakademie</option><option>Ohne</option></select>
+            <select id="zf-vbnd"><option>VSAN</option><option>NVH-B</option><option>Schwäb. Narrenakademie</option><option>Ohne</option></select>
           </div>
-          <div class="form-group"><label>Anzahl Teilnehmer</label><input type="number" placeholder="z.B. 45"></div>
+          <div class="form-group"><label>Anzahl Teilnehmer</label><input id="zf-tn" type="number" placeholder="z.B. 45"></div>
           <div class="form-group"><label>Teilnahme am Umzug</label>
-            <select><option>Ja</option><option>Nein</option></select>
+            <select id="zf-umzug"><option>Ja</option><option>Nein</option></select>
           </div>
-          <div class="form-group" style="grid-column:1/-1"><label>Figurenbeschreibung (Häs)</label><input placeholder="z.B. Bienenmaske, schwarz-gelbes Häs, Tambourmajor"></div>
+          <div class="form-group" style="grid-column:1/-1"><label>Figurenbeschreibung (Häs)</label><input id="zf-hae" placeholder="z.B. Bienenmaske, schwarz-gelbes Häs, Tambourmajor"></div>
           <div class="form-group"><label>Ankunft geplant</label><input type="datetime-local" value="2027-02-05T14:00"></div>
           <div class="form-group"><label>Abreise geplant</label><input type="datetime-local" value="2027-02-07T16:00"></div>
           <div class="form-group"><label>Unterkunft benötigt</label>
@@ -357,7 +357,7 @@ tr[draggable="true"]{cursor:default}
             <select><option>Nein</option><option>Eigene Gruppe</option><option>Ja – extern</option></select>
           </div>
           <div class="form-group" style="grid-column:1/-1;margin-top:6px">
-            <button class="btn btn-primary" style="width:100%">✅ Zunft anmelden</button>
+            <button class="btn btn-primary" style="width:100%" onclick="zunftAnmelden()">✅ Zunft anmelden</button>
           </div>
         </div>
       </div>
@@ -1450,9 +1450,9 @@ tr[draggable="true"]{cursor:default}
   <div id="hv-anmeldung" style="display:none">
   <div class="grid2" style="margin-bottom:20px">
     <div class="panel">
-      <div class="panel-head">👥 Registrierte Helfer <div class="panel-head badge">127 Personen</div></div>
+      <div class="panel-head">👥 Registrierte Helfer <div class="panel-head badge" id="helfer-badge">127 Personen</div></div>
       <div class="panel-body" style="padding:0;max-height:460px;overflow-y:auto">
-        <table class="tbl">
+        <table class="tbl" id="helfer-liste">
           <thead><tr><th>Name</th><th>Bereich</th><th>Schichten</th><th>Mobil</th><th>Status</th></tr></thead>
           <tbody>
             <tr><td><strong>Maria Weber</strong></td><td>Gesamtleitung</td><td>Fr–So</td><td>0152 2345 6789</td><td><span class="pill pill-green">Bestätigt</span></td></tr>
@@ -1473,11 +1473,11 @@ tr[draggable="true"]{cursor:default}
     <div class="panel">
       <div class="panel-head">➕ Neuen Helfer anmelden</div>
       <div class="panel-body">
-        <div class="form-grid" style="gap:10px">
-          <div class="form-group"><label>Vorname *</label><input placeholder="Vorname"></div>
-          <div class="form-group"><label>Nachname *</label><input placeholder="Nachname"></div>
-          <div class="form-group"><label>Mobil</label><input type="tel" placeholder="+49 ..."></div>
-          <div class="form-group"><label>E-Mail</label><input type="email" placeholder="name@..."></div>
+        <div class="form-grid" style="gap:10px" id="hf-form">
+          <div class="form-group"><label>Vorname *</label><input id="hf-vor" placeholder="Vorname"></div>
+          <div class="form-group"><label>Nachname *</label><input id="hf-nach" placeholder="Nachname"></div>
+          <div class="form-group"><label>Mobil</label><input id="hf-tel" type="tel" placeholder="+49 ..."></div>
+          <div class="form-group"><label>E-Mail</label><input id="hf-email" type="email" placeholder="name@..."></div>
           <div class="form-group" style="grid-column:1/-1"><label>Gewünschter Bereich</label>
             <select>
               <option>🔨 Aufbau / Abbau</option><option>🦺 Ordner – Umzugsstrecke</option>
@@ -1507,7 +1507,7 @@ tr[draggable="true"]{cursor:default}
             <select><option>S</option><option>M</option><option>L</option><option>XL</option><option>XXL</option></select>
           </div>
           <div class="form-group" style="grid-column:1/-1;margin-top:6px">
-            <button class="btn btn-primary" style="width:100%">✅ Als Helfer anmelden</button>
+            <button class="btn btn-primary" style="width:100%" onclick="helferAnmelden()">✅ Als Helfer anmelden</button>
           </div>
         </div>
       </div>
@@ -4149,12 +4149,131 @@ function nt27InitKontakte(){
   });
 }
 
+// ── HTML escapen ─────────────────────────────────────────────────
+function nt27Escape(s){
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ── Zunft anmelden ───────────────────────────────────────────────
+function zunftAnmelden(){
+  var name  = (document.getElementById('zf-name') ||{}).value ||'';
+  var zm    = (document.getElementById('zf-zm')   ||{}).value ||'';
+  var tel   = (document.getElementById('zf-tel')  ||{}).value ||'';
+  var ort   = (document.getElementById('zf-ort')  ||{}).value ||'';
+  var tn    = (document.getElementById('zf-tn')   ||{}).value ||'';
+  var umzug = (document.getElementById('zf-umzug')||{}).value ||'Ja';
+  var hae   = (document.getElementById('zf-hae')  ||{}).value ||'';
+
+  name = name.trim();
+  if(!name){ alert('Bitte Zunftname eingeben.'); document.getElementById('zf-name').focus(); return; }
+
+  var tbody = document.querySelector('#zunftTabelle tbody');
+  if(!tbody) return;
+
+  var nr = tbody.rows.length + 1;
+  var tr = document.createElement('tr');
+  tr.setAttribute('data-st','Ausstehend');
+  tr.innerHTML =
+    '<td>'+nr+'</td>'+
+    '<td><strong>'+nt27Escape(name)+'</strong></td>'+
+    '<td>'+nt27Escape(ort)+'</td>'+
+    '<td>—</td>'+
+    '<td>'+nt27Escape(zm)+'</td>'+
+    '<td>'+nt27Escape(tel)+'</td>'+
+    '<td><em>'+nt27Escape(hae)+'</em></td>'+
+    '<td>'+nt27Escape(tn||'—')+'</td>'+
+    '<td>'+(umzug==='Ja'?'✅':'Nein')+'</td>'+
+    '<td><span class="pill pill-gold">Ausstehend</span></td>';
+  tbody.appendChild(tr);
+
+  // NT27: Zeile editierbar machen + speichern
+  if(window._nt27anmeldung){
+    nt27BindRows(tbody,'anmeldung',{skipNr:true});
+    nt27SaveTable(tbody,'anmeldung');
+  } else {
+    localStorage.setItem('nt27_t_anmeldung', tbody.innerHTML);
+    nt27Flash();
+  }
+
+  // Badge aktualisieren
+  var badge = document.getElementById('zunftCount');
+  if(badge) badge.textContent = tbody.rows.length + ' / 50 angemeldet';
+
+  // Formular leeren
+  ['zf-name','zf-zm','zf-email','zf-tel','zf-ort','zf-tn','zf-hae'].forEach(function(id){
+    var el=document.getElementById(id); if(el) el.value='';
+  });
+
+  // Zur Tabelle scrollen
+  var tbl = document.getElementById('zunftTabelle');
+  if(tbl) tbl.scrollIntoView({behavior:'smooth',block:'end'});
+
+  alert('✅ '+name+' wurde erfolgreich angemeldet!');
+}
+
+// ── Helfer anmelden ──────────────────────────────────────────────
+function helferAnmelden(){
+  var vor  = (document.getElementById('hf-vor') ||{}).value ||'';
+  var nach = (document.getElementById('hf-nach')||{}).value ||'';
+  var tel  = (document.getElementById('hf-tel') ||{}).value ||'';
+
+  vor = vor.trim(); nach = nach.trim();
+  if(!vor||!nach){ alert('Bitte Vor- und Nachname eingeben.'); return; }
+
+  var bereichSel = document.querySelector('#hf-form select');
+  var bereich = bereichSel ? bereichSel.value.replace(/^[^\s]*\s/,'') : '—';
+
+  var shifts = Array.from(document.querySelectorAll('#hf-form input[type="checkbox"]:checked'))
+    .map(function(cb){ return cb.closest('label').textContent.trim().split('(')[0].trim(); })
+    .join(', ') || '—';
+
+  var tbody = document.querySelector('#helfer-liste tbody');
+  if(!tbody) return;
+
+  var tr = document.createElement('tr');
+  tr.innerHTML =
+    '<td><strong>'+nt27Escape(vor+' '+nach)+'</strong></td>'+
+    '<td>'+nt27Escape(bereich.split('&')[0].trim())+'</td>'+
+    '<td style="font-size:.78rem">'+nt27Escape(shifts)+'</td>'+
+    '<td>'+nt27Escape(tel||'—')+'</td>'+
+    '<td><span class="pill pill-gold">Neu</span></td>';
+
+  // Vor "117 weitere" einfügen
+  var weitere = tbody.querySelector('td[colspan]');
+  weitere ? tbody.insertBefore(tr, weitere.parentNode) : tbody.appendChild(tr);
+
+  // Speichern
+  localStorage.setItem('nt27_helfer', tbody.innerHTML);
+  nt27Flash();
+
+  // Badge
+  var badge = document.getElementById('helfer-badge');
+  if(badge) badge.textContent = (tbody.rows.length) + ' Personen';
+
+  // Formular leeren
+  ['hf-vor','hf-nach','hf-tel','hf-email'].forEach(function(id){
+    var el=document.getElementById(id); if(el) el.value='';
+  });
+  document.querySelectorAll('#hf-form input[type="checkbox"]').forEach(function(cb){ cb.checked=false; });
+
+  alert('✅ '+vor+' '+nach+' wurde als Helfer registriert!');
+}
+
+// ── Helfer-Liste aus localStorage wiederherstellen ───────────────
+function nt27RestoreHelfer(){
+  var saved = localStorage.getItem('nt27_helfer');
+  var tbody = document.querySelector('#helfer-liste tbody');
+  if(saved && tbody) tbody.innerHTML = saved;
+}
+
 // Init beim Laden
 document.addEventListener('DOMContentLoaded', function(){
   initCharts();
   nt27InitCells();
-  // Abschnitte die sofort sichtbar sind (Dashboard ist aktiv)
-  // Andere Abschnitte werden lazy beim Tab-Klick initialisiert (show())
+  nt27RestoreHelfer();
+  // Finanzen sofort initialisieren (nicht lazy), damit Felder immer editierbar sind
+  nt27InitFinanzen();
+  window._nt27finanzen = true;
 });
 </script>
 </body>
