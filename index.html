@@ -118,6 +118,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .nt27-prog-del:hover{opacity:1;background:#fdd}
 .nt27-prog-style{right:26px;opacity:.3;color:#555}
 .nt27-prog-style:hover{opacity:1;background:#f0f0f0}
+.nt27-prog-handle{cursor:grab;color:#bbb;font-size:1rem;padding:0 6px 0 0;user-select:none;flex-shrink:0;align-self:center}
+.nt27-prog-handle:active{cursor:grabbing}
+.sched-item.nt27-dragging{opacity:.4;box-shadow:0 4px 16px rgba(0,0,0,.18)}
+.sched-item.nt27-drag-over{outline:2px dashed var(--gold);background:#fffde7!important}
 
 /* ── KANBAN / HELFER ── */
 .kanban{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
@@ -4138,21 +4142,21 @@ function nt27SaveFinanzen(fin){
   nt27Flash();
 }
 
-// ── Programm: Inline-Edit ────────────────────────────────────────
+// ── Programm: Inline-Edit + Drag & Drop ─────────────────────────
 function nt27InitProgramm(){
   var prog=document.getElementById('programm');
   if(!prog) return;
   var grid=prog.querySelector('.grid3');
   if(!grid) return;
 
-  // Restore saved schedule (saved without NT27 buttons)
+  // Restore saved schedule (handles/buttons stripped before save)
   var saved=localStorage.getItem('nt27_prog');
   if(saved) grid.innerHTML=saved;
 
-  // Save: clone grid, strip NT27 buttons, store clean HTML
+  // Save: clone, strip all NT27 chrome, store clean HTML
   function saveProg(){
     var clone=grid.cloneNode(true);
-    clone.querySelectorAll('.nt27-prog-del,.nt27-prog-style,.nt27-prog-add').forEach(function(el){ el.remove(); });
+    clone.querySelectorAll('.nt27-prog-del,.nt27-prog-style,.nt27-prog-add,.nt27-prog-handle').forEach(function(el){ el.remove(); });
     localStorage.setItem('nt27_prog',clone.innerHTML);
     nt27Flash();
   }
@@ -4164,7 +4168,47 @@ function nt27InitProgramm(){
     h.addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); this.blur(); } });
   });
 
-  // Bind a single sched-item: add editable fields + style + delete buttons
+  // Drag-and-drop state
+  var dragSrc=null;
+  var dragFromHandle=false;
+  if(!window._nt27progMU){ window._nt27progMU=true; document.addEventListener('mouseup',function(){ dragFromHandle=false; }); }
+
+  function bindDrag(item){
+    if(item.querySelector('.nt27-prog-handle')) return;
+    var h=document.createElement('span');
+    h.className='nt27-prog-handle'; h.innerHTML='⠿'; h.title='Verschieben (ziehen)';
+    h.addEventListener('mousedown',function(e){ e.stopPropagation(); dragFromHandle=true; });
+    item.insertBefore(h,item.firstChild);
+
+    item.draggable=true;
+    item.addEventListener('dragstart',function(e){
+      if(!dragFromHandle){ e.preventDefault(); return; }
+      dragSrc=item; dragFromHandle=false;
+      item.classList.add('nt27-dragging');
+      e.dataTransfer.effectAllowed='move';
+    });
+    item.addEventListener('dragend',function(){
+      dragSrc=null; item.classList.remove('nt27-dragging');
+      prog.querySelectorAll('.sched-item').forEach(function(i){ i.classList.remove('nt27-drag-over'); });
+    });
+    item.addEventListener('dragover',function(e){
+      if(!dragSrc||dragSrc===item) return;
+      e.preventDefault();
+      prog.querySelectorAll('.sched-item').forEach(function(i){ i.classList.remove('nt27-drag-over'); });
+      item.classList.add('nt27-drag-over');
+    });
+    item.addEventListener('drop',function(e){
+      e.preventDefault();
+      if(!dragSrc||dragSrc===item) return;
+      item.classList.remove('nt27-drag-over');
+      var r=item.getBoundingClientRect();
+      if(e.clientY < r.top+r.height/2) item.parentNode.insertBefore(dragSrc,item);
+      else item.parentNode.insertBefore(dragSrc,item.nextSibling);
+      saveProg();
+    });
+  }
+
+  // Bind a single sched-item: editable fields + style + delete + drag
   function bindItem(item){
     item.querySelectorAll('.sched-time,.sched-title,.sched-loc').forEach(function(el){
       el.contentEditable='true';
@@ -4194,13 +4238,22 @@ function nt27InitProgramm(){
       };
       item.appendChild(db);
     }
+    bindDrag(item);
   }
 
-  // Bind existing items
+  // Bind all existing items
   prog.querySelectorAll('.sched-item').forEach(bindItem);
 
-  // "Termin hinzufügen" button per day column
+  // "Termin hinzufügen" + drop-zone per day column
   grid.querySelectorAll(':scope > div').forEach(function(col){
+    col.addEventListener('dragover',function(e){ if(dragSrc) e.preventDefault(); });
+    col.addEventListener('drop',function(e){
+      if(!dragSrc) return; e.preventDefault();
+      prog.querySelectorAll('.sched-item').forEach(function(i){ i.classList.remove('nt27-drag-over'); });
+      var addBtn=col.querySelector('.nt27-prog-add');
+      col.insertBefore(dragSrc,addBtn||null);
+      saveProg();
+    });
     if(col.querySelector('.nt27-prog-add')) return;
     var btn=document.createElement('button');
     btn.className='btn btn-outline nt27-prog-add';
@@ -4218,8 +4271,8 @@ function nt27InitProgramm(){
     col.appendChild(btn);
   });
 
-  // Veranstaltungsorte table via nt27InitTable
-  if(document.getElementById('progVenuesTbl') && !window._nt27venues){
+  // Veranstaltungsorte table
+  if(document.getElementById('progVenuesTbl')&&!window._nt27venues){
     window._nt27venues=true;
     nt27InitTable('progVenuesTbl','prog_venues',{});
   }
