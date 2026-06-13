@@ -4072,22 +4072,10 @@ function nt27BindRows(tbody, saveKey, opts){
       delBtn.onmousedown=function(e){ e.preventDefault(); e.stopPropagation(); };
       delBtn.onclick=function(e){
         e.preventDefault(); e.stopPropagation();
-        if(delBtn.dataset.confirming){
-          clearTimeout(delBtn._t);
-          row.remove();
-          nt27SaveTable(tbody,saveKey);
-          if(opts&&opts.renumber) nt27RenumberRows(tbody);
-          if(typeof nt27RenderZunftPool==='function') nt27RenderZunftPool();
-        } else {
-          delBtn.dataset.confirming='1';
-          delBtn.innerHTML='✓?';
-          delBtn.style.cssText='opacity:1;background:#fdd;color:#c00';
-          delBtn._t=setTimeout(function(){
-            delete delBtn.dataset.confirming;
-            delBtn.innerHTML='✕';
-            delBtn.style.cssText='';
-          },3000);
-        }
+        row.remove();
+        nt27SaveTable(tbody,saveKey);
+        if(opts&&opts.renumber) nt27RenumberRows(tbody);
+        if(typeof nt27RenderZunftPool==='function') nt27RenderZunftPool();
       };
       delTd.appendChild(delBtn);
       row.appendChild(delTd);
