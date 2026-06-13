@@ -1096,6 +1096,42 @@ tr[draggable="true"]{cursor:default}
       </div>
     </div>
   </div>
+
+  <div class="panel" style="margin-top:20px">
+    <div class="panel-head">💰 Barkassen-Verwaltung
+      <span style="margin-left:auto;font-size:.75rem;font-weight:400;color:#bbb">Wechselgeld Ausgabe &amp; Rückgabe · beliebig viele Kassen</span>
+    </div>
+    <div class="panel-body" style="padding:0">
+      <table class="tbl" id="barkasseTbl" style="width:100%">
+        <thead>
+          <tr>
+            <th>Station / Kasse</th>
+            <th>Person</th>
+            <th style="text-align:right;white-space:nowrap">Ausgegeben €</th>
+            <th style="text-align:right;white-space:nowrap">Zurück €</th>
+            <th>Status</th>
+            <th>Notiz</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Bar 1 – Festzelt</td><td>—</td><td style="text-align:right">300</td><td style="text-align:right">0</td><td>offen</td><td></td></tr>
+          <tr><td>Bar 2 – Reithalle</td><td>—</td><td style="text-align:right">300</td><td style="text-align:right">0</td><td>offen</td><td></td></tr>
+          <tr><td>Bar 3 – Außenbereich</td><td>—</td><td style="text-align:right">200</td><td style="text-align:right">0</td><td>offen</td><td></td></tr>
+          <tr><td>Einlass Reithalle Sa</td><td>—</td><td style="text-align:right">150</td><td style="text-align:right">0</td><td>offen</td><td></td></tr>
+          <tr><td>Einlass Zelt Fr</td><td>—</td><td style="text-align:right">150</td><td style="text-align:right">0</td><td>offen</td><td></td></tr>
+          <tr><td>Tombola-Stand</td><td>—</td><td style="text-align:right">100</td><td style="text-align:right">0</td><td>offen</td><td></td></tr>
+        </tbody>
+        <tfoot>
+          <tr style="font-weight:800;background:#fffde7">
+            <td colspan="2" style="padding:8px 12px">Gesamt Wechselgeld</td>
+            <td id="barkasseSumAus" style="padding:8px 12px;text-align:right;color:var(--gold-dark)">1.200</td>
+            <td id="barkasseSumZurueck" style="padding:8px 12px;text-align:right">0</td>
+            <td colspan="2" style="padding:8px 12px;font-size:.78rem;color:#aaa">Summen manuell aktualisieren</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
 </section>
 
 <!-- ═══════════════════════════════════════════ HELFER ══════════════════════════════════ -->
@@ -4106,8 +4142,12 @@ function nt27InitFinanzen(){
     window._nt27finAusg=true;
     nt27InitTable('finAusgTbl','fin_ausg',{});
   }
+  if(document.getElementById('barkasseTbl')&&!window._nt27barkasse){
+    window._nt27barkasse=true;
+    nt27InitTable('barkasseTbl','barkasse',{});
+  }
   // Summe-Zeilen manuell editierbar machen
-  ['finEinnSumPlan','finEinnSumIst','finAusgSumPlan','finAusgSumIst'].forEach(function(id){
+  ['finEinnSumPlan','finEinnSumIst','finAusgSumPlan','finAusgSumIst','barkasseSumAus','barkasseSumZurueck'].forEach(function(id){
     var el=document.getElementById(id);
     if(!el||el.contentEditable==='true') return;
     el.contentEditable='true';
