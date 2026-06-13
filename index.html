@@ -1395,7 +1395,7 @@ tr[draggable="true"]{cursor:default}
   <div class="panel">
     <div class="panel-head">📋 Bereichssteckbriefe — was wird wo gebraucht</div>
     <div class="panel-body">
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px">
+      <div id="helferKcardGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px">
         <div class="kcard" style="border-color:#f5c518"><div class="kcard-title">🔨 Aufbau / Abbau</div><div class="kcard-meta">Fr ab 09:00 · So ab 17:00 · 25+40 Pers.<br>Aufgaben: Reithalle + Zelt einrichten, Biertische, Bühne, Absperrungen, Beschilderung, Dekoration<br><strong style="color:var(--red)">⚠ Abbau So. Abend: 28 Stellen offen!</strong></div></div>
         <div class="kcard" style="border-color:#388e3c"><div class="kcard-title">🦺 Ordner Umzugsstrecke</div><div class="kcard-meta">So 12:00–17:00 · 20 Pers. entlang 2,2 km<br>Aufgaben: Straßensperren, Zuschauerlenkung, Absperrband, Funkkontakt zur Polizei<br>Ausweis: orange Weste, Funkgerät</div></div>
         <div class="kcard" style="border-color:#1565c0"><div class="kcard-title">🎟 Einlass &amp; Kasse</div><div class="kcard-meta">Fr Zelt + Sa Reithalle Abend · 8–18 Pers./Schicht<br>Aufgaben: QR-Scanner, Abendkasse, Alterscheck, Kapazitätszählung Reithalle (3.000) + Zelt (1.500)<br><strong style="color:var(--red)">⚠ Sa Brauchtumsabend (Reithalle): 8 Stellen offen!</strong></div></div>
@@ -1511,7 +1511,6 @@ tr[draggable="true"]{cursor:default}
             <tr><td><strong>Werner Hoch</strong></td><td>Aufbau/Abbau</td><td>Fr Aufbau</td><td>0163 9900 1122</td><td><span class="pill pill-green">Bestätigt</span></td></tr>
             <tr><td><strong>Petra Zinser</strong></td><td>Gästebetreuung</td><td>Fr–Sa</td><td>0172 0011 2233</td><td><span class="pill pill-green">Bestätigt</span></td></tr>
             <tr><td><strong>Hans-Georg Ruf</strong></td><td>Reinigung</td><td>Sa + So</td><td>0176 1122 3344</td><td><span class="pill pill-gold">Ausstehend</span></td></tr>
-            <tr><td colspan="5" style="color:#bbb;font-style:italic">117 weitere Helfer…</td></tr>
           </tbody>
         </table>
       </div>
@@ -1554,6 +1553,7 @@ tr[draggable="true"]{cursor:default}
           </div>
           <div class="form-group" style="grid-column:1/-1;margin-top:6px">
             <button class="btn btn-primary" style="width:100%" onclick="helferAnmelden()">✅ Als Helfer anmelden</button>
+            <div id="hf-msg" style="font-size:.82rem;margin-top:6px"></div>
           </div>
         </div>
       </div>
@@ -3104,6 +3104,7 @@ function show(id, btn) {
   if (id === 'unterkunft' && !window._nt27unterkunft) { window._nt27unterkunft = true; nt27InitUnterkunft(); }
   if (id === 'tickets'    && !window._nt27tickets)    { window._nt27tickets    = true; nt27InitTickets(); }
   if (id === 'tombola'    && !window._nt27tombola)    { window._nt27tombola    = true; nt27InitTombola(); }
+  if (id === 'helfer'     && !window._nt27helfer)     { window._nt27helfer     = true; nt27InitHelfer(); }
 }
 
 // ── Chart: Anmeldungsverlauf ─────────────────────────────────────────────────
@@ -4169,6 +4170,122 @@ function nt27AutoSum(tblId, sumMap){
   recalc();
 }
 
+// ── Helfer: Inline-Edit ──────────────────────────────────────────
+function nt27InitHelfer(){
+  var sec=document.getElementById('helfer');
+  if(!sec) return;
+
+  // 1. Section-Title-Span
+  var span=sec.querySelector('.section-title span');
+  if(span){
+    var ssh=localStorage.getItem('nt27_helfer_span'); if(ssh) span.textContent=ssh;
+    span.contentEditable='true'; span.title='Klicken zum Bearbeiten';
+    span.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();this.blur();}});
+    span.addEventListener('blur',function(){ localStorage.setItem('nt27_helfer_span',span.textContent); nt27Flash(); });
+  }
+
+  // 2. Alert-Banner
+  var ueb=document.getElementById('hv-uebersicht');
+  if(ueb) ueb.querySelectorAll('.alert').forEach(function(el,i){
+    var key='nt27_helfer_alert_'+i;
+    var saved=localStorage.getItem(key); if(saved) el.innerHTML=saved;
+    el.contentEditable='true'; el.title='Klicken zum Bearbeiten';
+    el.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();this.blur();}});
+    el.addEventListener('blur',function(){ localStorage.setItem(key,el.innerHTML); nt27Flash(); });
+  });
+
+  // 3. Card-Vals
+  sec.querySelectorAll('.card-val').forEach(function(el,i){
+    var key='nt27_helfer_cv_'+i;
+    var sv=localStorage.getItem(key); if(sv) el.textContent=sv;
+    el.contentEditable='true'; el.title='Klicken zum Bearbeiten';
+    el.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();this.blur();}});
+    el.addEventListener('blur',function(){ localStorage.setItem(key,el.textContent); nt27Flash(); });
+  });
+
+  // 4. Schichtmatrix — alle tbody-Zellen editierbar
+  var matrix=sec.querySelector('#hv-uebersicht table.tbl');
+  if(matrix){
+    var matSaved=localStorage.getItem('nt27_helfer_matrix');
+    if(matSaved) matrix.querySelector('tbody').innerHTML=matSaved;
+    matrix.querySelectorAll('tbody td').forEach(function(td){
+      td.contentEditable='true'; td.title='Klicken zum Bearbeiten';
+      td.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();this.blur();}});
+      td.addEventListener('blur',function(){
+        localStorage.setItem('nt27_helfer_matrix', matrix.querySelector('tbody').innerHTML);
+        nt27Flash();
+      });
+    });
+  }
+
+  // 5. Bereichssteckbriefe (kcard-Grid)
+  var kgrid=document.getElementById('helferKcardGrid');
+  if(kgrid){
+    var saveKcards=function(){
+      var clone=kgrid.cloneNode(true);
+      clone.querySelectorAll('.nt27-kcard-del').forEach(function(b){b.remove();});
+      localStorage.setItem('nt27_helfer_kcards',clone.innerHTML);
+      nt27Flash();
+    };
+    var bindKcard=function(kcard){
+      ['.kcard-title','.kcard-meta'].forEach(function(sel){
+        var el=kcard.querySelector(sel); if(!el) return;
+        el.contentEditable='true'; el.title='Klicken zum Bearbeiten';
+        el.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();this.blur();}});
+        el.addEventListener('blur',saveKcards);
+      });
+      if(!kcard.querySelector('.nt27-kcard-del')){
+        var del=document.createElement('button');
+        del.className='nt27-kcard-del';
+        del.innerHTML='✕'; del.title='Bereich entfernen';
+        del.style.cssText='position:absolute;top:6px;right:6px;border:none;background:transparent;color:#c00;font-size:.7rem;cursor:pointer;opacity:.35;padding:2px 5px;border-radius:3px;line-height:1';
+        del.onmouseenter=function(){del.style.opacity='1';del.style.background='#fdd';};
+        del.onmouseleave=function(){del.style.opacity='.35';del.style.background='transparent';};
+        del.onclick=function(e){e.preventDefault();e.stopPropagation();kcard.remove();saveKcards();};
+        kcard.style.position='relative';
+        kcard.appendChild(del);
+      }
+    };
+    var savedKcards=localStorage.getItem('nt27_helfer_kcards');
+    if(savedKcards) kgrid.innerHTML=savedKcards;
+    kgrid.querySelectorAll('.kcard').forEach(bindKcard);
+    var addKBtn=document.createElement('button');
+    addKBtn.className='btn btn-outline nt27-add-btn';
+    addKBtn.innerHTML='➕ Neuen Bereich hinzufügen';
+    addKBtn.style.cssText='margin-top:12px;width:100%';
+    addKBtn.onclick=function(){
+      var kcard=document.createElement('div');
+      kcard.className='kcard';
+      kcard.innerHTML='<div class="kcard-title">Neuer Bereich</div><div class="kcard-meta">Aufgaben und Besetzung…</div>';
+      kgrid.appendChild(kcard);
+      bindKcard(kcard);
+      saveKcards();
+    };
+    kgrid.parentNode.insertBefore(addKBtn,kgrid.nextSibling);
+  }
+
+  // 6. Helfer-Liste (Anmeldung-Tab): CRUD
+  // Migration: altes Format übernehmen
+  if(!localStorage.getItem('nt27_t_helfer_liste')){
+    var old=localStorage.getItem('nt27_helfer');
+    if(old) localStorage.setItem('nt27_t_helfer_liste',old);
+  }
+  nt27InitTable('helfer-liste','helfer_liste',{});
+  // Badge-Aktualisierung via MutationObserver
+  var lTbl=document.getElementById('helfer-liste');
+  if(lTbl){
+    var updateBadge=function(){
+      var badge=document.getElementById('helfer-badge');
+      if(badge){
+        var count=lTbl.querySelectorAll('tbody tr').length;
+        badge.textContent=count+' Personen';
+      }
+    };
+    new MutationObserver(updateBadge).observe(lTbl.tBodies[0],{childList:true});
+    updateBadge();
+  }
+}
+
 // ── Tickets: Inline-Edit ─────────────────────────────────────────
 function nt27InitTickets(){
   var sec=document.getElementById('tickets');
@@ -4817,7 +4934,11 @@ function helferAnmelden(){
   var tel  = (document.getElementById('hf-tel') ||{}).value ||'';
 
   vor = vor.trim(); nach = nach.trim();
-  if(!vor||!nach){ alert('Bitte Vor- und Nachname eingeben.'); return; }
+  if(!vor||!nach){
+    var msg=document.getElementById('hf-msg');
+    if(msg){msg.textContent='⚠ Bitte Vor- und Nachname eingeben.';msg.style.cssText='color:#c00;font-size:.82rem;margin-top:6px';}
+    return;
+  }
 
   var bereichSel = document.querySelector('#hf-form select');
   var bereich = bereichSel ? bereichSel.value.replace(/^[^\s]*\s/,'') : '—';
@@ -4831,23 +4952,15 @@ function helferAnmelden(){
 
   var tr = document.createElement('tr');
   tr.innerHTML =
-    '<td><strong>'+nt27Escape(vor+' '+nach)+'</strong></td>'+
+    '<td>'+nt27Escape(vor+' '+nach)+'</td>'+
     '<td>'+nt27Escape(bereich.split('&')[0].trim())+'</td>'+
-    '<td style="font-size:.78rem">'+nt27Escape(shifts)+'</td>'+
+    '<td>'+nt27Escape(shifts)+'</td>'+
     '<td>'+nt27Escape(tel||'—')+'</td>'+
-    '<td><span class="pill pill-gold">Neu</span></td>';
+    '<td>Neu</td>';
 
-  // Vor "117 weitere" einfügen
-  var weitere = tbody.querySelector('td[colspan]');
-  weitere ? tbody.insertBefore(tr, weitere.parentNode) : tbody.appendChild(tr);
-
-  // Speichern
-  localStorage.setItem('nt27_helfer', tbody.innerHTML);
-  nt27Flash();
-
-  // Badge
-  var badge = document.getElementById('helfer-badge');
-  if(badge) badge.textContent = (tbody.rows.length) + ' Personen';
+  tbody.appendChild(tr);
+  nt27BindRows(tbody,'helfer_liste',{});
+  nt27SaveTable(tbody,'helfer_liste');
 
   // Formular leeren
   ['hf-vor','hf-nach','hf-tel','hf-email'].forEach(function(id){
@@ -4855,21 +4968,19 @@ function helferAnmelden(){
   });
   document.querySelectorAll('#hf-form input[type="checkbox"]').forEach(function(cb){ cb.checked=false; });
 
-  alert('✅ '+vor+' '+nach+' wurde als Helfer registriert!');
-}
-
-// ── Helfer-Liste aus localStorage wiederherstellen ───────────────
-function nt27RestoreHelfer(){
-  var saved = localStorage.getItem('nt27_helfer');
-  var tbody = document.querySelector('#helfer-liste tbody');
-  if(saved && tbody) tbody.innerHTML = saved;
+  // Erfolgsmeldung
+  var msg=document.getElementById('hf-msg');
+  if(msg){
+    msg.textContent='✅ '+vor+' '+nach+' wurde als Helfer registriert!';
+    msg.style.cssText='color:var(--green);font-size:.82rem;margin-top:6px;font-weight:700';
+    setTimeout(function(){if(msg)msg.textContent='';},4000);
+  }
 }
 
 // Init beim Laden
 document.addEventListener('DOMContentLoaded', function(){
   initCharts();
   nt27InitCells();
-  nt27RestoreHelfer();
   // Finanzen sofort initialisieren (nicht lazy), damit Felder immer editierbar sind
   nt27InitFinanzen();
   window._nt27finanzen = true;
