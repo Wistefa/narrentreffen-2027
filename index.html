@@ -305,7 +305,7 @@ tr[draggable="true"]{cursor:default}
 
 <!-- ═══════════════════════════════════════════ ZUNFTANMELDUNG ════════════════════════════ -->
 <section class="section" id="anmeldung">
-  <div class="section-title">📋 Zunftanmeldung <span>32 angemeldet</span></div>
+  <div class="section-title">📋 Zunftanmeldung <span id="zunftCountTitle"></span></div>
   <div class="alert alert-gold">📮 Anmeldefrist: 30. September 2026 · Bitte Umzugsteilnahme und Trachten-Beschreibung angeben.</div>
 
   <!-- Suchzeile -->
@@ -393,7 +393,7 @@ tr[draggable="true"]{cursor:default}
 
   <!-- Vollständige Zünfte-Tabelle -->
   <div class="panel" style="margin-top:20px">
-    <div class="panel-head">📋 Alle 50 eingeladenen Zünfte (NVH-B) <div class="panel-head badge" id="zunftCount">47 / 50 angemeldet</div></div>
+    <div class="panel-head">📋 Alle angemeldeten Zünfte (NVH-B) <div class="panel-head badge" id="zunftCount"></div></div>
     <div style="overflow-x:auto;max-height:620px;overflow-y:auto">
       <table class="tbl" id="zunftTabelle">
         <thead style="position:sticky;top:0;z-index:10">
@@ -3059,6 +3059,10 @@ function show(id, btn) {
     var _ztb = document.querySelector('#zunftTabelle tbody');
     if (_ztb) nt27InitZunftSelects(_ztb);
   }
+  if (id === 'anmeldung') {
+    var _ztb2 = document.querySelector('#zunftTabelle tbody');
+    if (_ztb2) nt27UpdateZunftCount(_ztb2);
+  }
   if (id === 'kontakte' && !window._nt27kontakte)  { window._nt27kontakte = true; nt27InitKontakte(); }
   if (id === 'finanzen' && !window._nt27finanzen)  { window._nt27finanzen = true; nt27InitFinanzen(); }
   if (id === 'programm' && !window._nt27programm)  { window._nt27programm = true; nt27InitProgramm(); }
@@ -3172,6 +3176,15 @@ function filterKontakte() {
     const vis = [...panel.querySelectorAll('tbody tr')].some(r => r.style.display !== 'none');
     panel.style.display = vis ? '' : 'none';
   });
+}
+
+// ── Zunftanmeldung: Zähler dynamisch aktualisieren ───────────────────────────
+function nt27UpdateZunftCount(tbody) {
+  var n = tbody ? tbody.rows.length : 0;
+  var badge = document.getElementById('zunftCount');
+  var title = document.getElementById('zunftCountTitle');
+  if (badge) badge.textContent = n + ' angemeldet';
+  if (title) title.textContent = n + ' angemeldet';
 }
 
 // ── Zunftanmeldung: Suche + Filter ───────────────────────────────────────────
@@ -4467,8 +4480,7 @@ function zunftAnmelden(){
   }
 
   // Badge aktualisieren
-  var badge = document.getElementById('zunftCount');
-  if(badge) badge.textContent = tbody.rows.length + ' / 50 angemeldet';
+  nt27UpdateZunftCount(tbody);
 
   // Formular leeren
   ['zf-name','zf-zm','zf-email','zf-tel','zf-ort','zf-tn','zf-hae'].forEach(function(id){
