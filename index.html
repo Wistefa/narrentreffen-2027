@@ -4900,8 +4900,16 @@ function kontaktSpeichern(btn){
   nt27SaveTable(tbody,saveKey);
   formPanel.querySelectorAll('.form-grid input').forEach(function(i){i.value='';});
   gruppeSelect.selectedIndex=0;
+  // Zur neuen Zeile scrollen + kurz gelb markieren
+  var newRow=tbody.rows[tbody.rows.length-1];
+  if(newRow){
+    newRow.style.transition='background .2s';
+    newRow.style.background='#fff9c4';
+    newRow.scrollIntoView({behavior:'smooth',block:'center'});
+    setTimeout(function(){ newRow.style.background=''; },2000);
+  }
   if(msg){
-    msg.textContent='✅ '+name+' wurde gespeichert!';
+    msg.textContent='✅ '+name+' in "'+gruppe+'" gespeichert – siehst du oben!';
     msg.style.cssText='color:var(--green);font-weight:700;font-size:.82rem';
     setTimeout(function(){if(msg)msg.textContent='';},4000);
   }
