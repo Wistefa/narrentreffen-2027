@@ -4480,21 +4480,24 @@ function nt27InitReithalle(){
   nt27InitTable('reitDekoTbl','reit_deko',{});
   nt27InitTable('reitBudgetTbl','reit_budget',{});
 
-  // 5. Aufbau-Zeitplan: 5 Tag-Karten (div[style*="line-height:2"])
-  var dayCards=sec.querySelectorAll('[style*="Aufbau-Zeitplan"] ~ * div[style*="line-height:2"]');
-  // Fallback: alle inline-content divs inside the grid inside Aufbau-Zeitplan panel
+  // 5. Aufbau-Zeitplan: 5 Tag-Karten — select by DOM position (chrome normalizes inline styles)
   var zeitplanPanel=null;
   sec.querySelectorAll('.panel').forEach(function(p){
     if(p.querySelector('.panel-head')&&p.querySelector('.panel-head').textContent.includes('Aufbau-Zeitplan')) zeitplanPanel=p;
   });
   if(zeitplanPanel){
-    zeitplanPanel.querySelectorAll('[style*="line-height:2"]').forEach(function(el,i){
-      var key='nt27_reit_day_'+i;
-      var sv=localStorage.getItem(key); if(sv!==null) el.innerHTML=sv;
-      el.contentEditable='true';
-      el.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();this.blur();}});
-      el.addEventListener('blur',function(){ localStorage.setItem(key,el.innerHTML); nt27Flash(); });
-    });
+    var gridDiv=zeitplanPanel.querySelector('.panel-body > div');
+    if(gridDiv){
+      Array.from(gridDiv.children).forEach(function(dayCard,i){
+        var contentDiv=dayCard.children[1]; // second child = content (after header)
+        if(!contentDiv) return;
+        var key='nt27_reit_day_'+i;
+        var sv=localStorage.getItem(key); if(sv!==null) contentDiv.innerHTML=sv;
+        contentDiv.contentEditable='true';
+        contentDiv.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();this.blur();}});
+        contentDiv.addEventListener('blur',function(){ localStorage.setItem(key,contentDiv.innerHTML); nt27Flash(); });
+      });
+    }
   }
 
   // 6. Offene Punkte (rechte Spalte im Budget-Panel)
@@ -4503,7 +4506,8 @@ function nt27InitReithalle(){
     if(p.querySelector('.panel-head')&&p.querySelector('.panel-head').textContent.includes('Budget-Übersicht Reithalle')) budgetPanel=p;
   });
   if(budgetPanel){
-    var offeneDiv=budgetPanel.querySelector('.grid2 > div:last-child > div[style*="background:#fff9e0"]');
+    var grid2=budgetPanel.querySelector('.grid2');
+    var offeneDiv=grid2&&grid2.children[1]?grid2.children[1].firstElementChild:null;
     if(offeneDiv){
       var svo=localStorage.getItem('nt27_reit_offene'); if(svo!==null) offeneDiv.innerHTML=svo;
       offeneDiv.contentEditable='true';
@@ -4560,19 +4564,24 @@ function nt27InitZmempfang(){
   nt27InitTable('zmHelferTbl','zm_helfer',{});
   nt27InitTable('zmBudgetTbl','zm_budget',{});
 
-  // 5. Aufbau-Zeitplan: 4 Tag-Karten
+  // 5. Aufbau-Zeitplan: 4 Tag-Karten — select by DOM position
   var zeitplanPanel=null;
   sec.querySelectorAll('.panel').forEach(function(p){
     if(p.querySelector('.panel-head')&&p.querySelector('.panel-head').textContent.includes('Aufbau-Zeitplan')) zeitplanPanel=p;
   });
   if(zeitplanPanel){
-    zeitplanPanel.querySelectorAll('[style*="line-height:2.1"]').forEach(function(el,i){
-      var key='nt27_zm_day_'+i;
-      var sv=localStorage.getItem(key); if(sv!==null) el.innerHTML=sv;
-      el.contentEditable='true';
-      el.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();this.blur();}});
-      el.addEventListener('blur',function(){ localStorage.setItem(key,el.innerHTML); nt27Flash(); });
-    });
+    var gridDiv=zeitplanPanel.querySelector('.panel-body > div');
+    if(gridDiv){
+      Array.from(gridDiv.children).forEach(function(dayCard,i){
+        var contentDiv=dayCard.children[1]; // second child = content (after header)
+        if(!contentDiv) return;
+        var key='nt27_zm_day_'+i;
+        var sv=localStorage.getItem(key); if(sv!==null) contentDiv.innerHTML=sv;
+        contentDiv.contentEditable='true';
+        contentDiv.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();this.blur();}});
+        contentDiv.addEventListener('blur',function(){ localStorage.setItem(key,contentDiv.innerHTML); nt27Flash(); });
+      });
+    }
   }
 
   // 6. To-Do / Offene Punkte (Budget-Panel rechte Spalte)
@@ -4581,7 +4590,8 @@ function nt27InitZmempfang(){
     if(p.querySelector('.panel-head')&&p.querySelector('.panel-head').textContent.includes('Budget-Übersicht Zunftmeisterempfang')) budgetPanel=p;
   });
   if(budgetPanel){
-    var offeneDiv=budgetPanel.querySelector('.grid2 > div:last-child > div[style*="background:#fff9e0"]');
+    var grid2=budgetPanel.querySelector('.grid2');
+    var offeneDiv=grid2&&grid2.children[1]?grid2.children[1].firstElementChild:null;
     if(offeneDiv){
       var svo=localStorage.getItem('nt27_zm_offene'); if(svo!==null) offeneDiv.innerHTML=svo;
       offeneDiv.contentEditable='true';
