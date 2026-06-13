@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; object-src 'none'; base-uri 'self'">
 <title>Narrentreffen 2027 — Binkerzunft Boll</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <style>
@@ -4180,8 +4181,8 @@ function spPrintCard(id) {
     'th{background:#f0f0f0}.header{background:#111;color:#fff;padding:10px 14px;border-radius:6px 6px 0 0}' +
     '.body{border:1px solid #ddd;border-top:none;padding:12px;border-radius:0 0 6px 6px}' +
     '@media print{@page{margin:15mm}}</style></head>' +
-    '<body><div class="header" style="display:flex;align-items:center;gap:8px">' + el.querySelector('.panel-head').innerHTML + '</div>' +
-    '<div class="body">' + (el.querySelector('.panel-body') ? el.querySelector('.panel-body').innerHTML : '') + '</div>' +
+    '<body><div class="header" style="display:flex;align-items:center;gap:8px">' + el.querySelector('.panel-head').textContent + '</div>' +
+    '<div class="body">' + (el.querySelector('.panel-body') ? el.querySelector('.panel-body').innerHTML.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,'') : '') + '</div>' +
     '<p style="margin-top:16px;font-size:11px;color:#aaa">Narrentreffen 2027 · Binkerzunft Boll e.V. · Gedruckt: ' + new Date().toLocaleDateString('de-DE') + '</p>' +
     '</body></html>');
   w.document.close();
@@ -4227,7 +4228,9 @@ var NT27 = {
       r.onload=function(ev){
         try{
           var d=JSON.parse(ev.target.result);
-          Object.keys(d).forEach(function(k){localStorage.setItem(k,d[k]);});
+          Object.keys(d).forEach(function(k){
+            if(k.startsWith('nt27_')||k.startsWith('sp_')) localStorage.setItem(k,d[k]);
+          });
           alert('✅ Daten importiert! Seite wird neu geladen.');location.reload();
         }catch(ex){alert('❌ Importfehler: '+ex.message);}
       };
@@ -5740,7 +5743,7 @@ function nt27InitZunftSelects(tbody){
 
 // ── HTML escapen ─────────────────────────────────────────────────
 function nt27Escape(s){
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
 // ── Zunft anmelden ───────────────────────────────────────────────
