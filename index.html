@@ -4079,7 +4079,9 @@ function nt27AddRow(tbody, saveKey, cols, opts){
 }
 
 function nt27SaveTable(tbody, saveKey){
-  localStorage.setItem('nt27_t_'+saveKey, tbody.innerHTML);
+  var clone = tbody.cloneNode(true);
+  Array.from(clone.rows).forEach(function(r){ r.style.display = ''; });
+  localStorage.setItem('nt27_t_'+saveKey, clone.innerHTML);
   nt27Flash();
 }
 
