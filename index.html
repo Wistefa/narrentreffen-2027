@@ -477,10 +477,11 @@ tr[draggable="true"]{cursor:default}
     <div class="panel">
       <div class="panel-head">🗺 Zugstrecke & Aufstellungsplan</div>
       <div class="panel-body">
-        <div class="map-ph">
-          🗺
-          <span>Karte: Zugstrecke Boll</span>
+        <div class="map-ph" id="umzug-map" onclick="nt27MapClick()" title="Klicken zum Hochladen eines Kartenbildes (JPG/PNG)" style="cursor:pointer">
+          <span id="umzug-map-icon">🗺</span>
+          <span id="umzug-map-label">Karte: Zugstrecke Boll</span>
           <span style="font-size:.75rem;font-weight:400">Start: Festplatz · Ziel: Dorfplatz · ca. 2,2 km</span>
+          <span style="font-size:.7rem;color:#aaa;margin-top:4px">📁 Klicken um Kartenbild hochzuladen</span>
         </div>
         <div style="margin-top:14px;font-size:.82rem">
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
@@ -513,6 +514,15 @@ tr[draggable="true"]{cursor:default}
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- ── ZUNFT-POOL: Angemeldete Zünfte die noch nicht eingeplant sind ── -->
+  <div class="panel" style="margin-top:20px" id="zunft-pool-panel">
+    <div class="panel-head">
+      📥 Angemeldete Zünfte — noch nicht im Aufstellungsplan
+      <div class="panel-head badge" id="pool-badge" style="margin-left:auto">wird geladen…</div>
+    </div>
+    <div id="zunft-pool-body" style="padding:12px;color:#aaa;font-size:.85rem">Zunftanmeldung-Tab öffnen um Daten zu laden…</div>
   </div>
 
   <!-- ── AUFSTELLUNGSPLAN (druckbar) ── -->
@@ -3035,7 +3045,11 @@ function show(id, btn) {
   if (id === 'tickets' && !window._ticketChart) initTicketChart();
   if (id === 'tombola' && !window._tombolaChart) initTombolaChart();
   // NT27: Tabellen lazy initialisieren
-  if (id === 'umzug'    && !window._nt27umzug)     { window._nt27umzug    = true; nt27InitTable('zugTbl',       'umzug',    {skipNr:true}); }
+  if (id === 'umzug') {
+    if (!window._nt27umzug) { window._nt27umzug = true; nt27InitTable('zugTbl', 'umzug', {skipNr:true}); }
+    nt27InitMapUpload();
+    nt27RenderZunftPool();
+  }
   if (id === 'anmeldung'&& !window._nt27anmeldung) { window._nt27anmeldung= true; nt27InitTable('zunftTabelle', 'anmeldung',{skipNr:true}); }
   if (id === 'kontakte' && !window._nt27kontakte)  { window._nt27kontakte = true; nt27InitKontakte(); }
   if (id === 'finanzen' && !window._nt27finanzen)  { window._nt27finanzen = true; nt27InitFinanzen(); }
@@ -4147,6 +4161,181 @@ function nt27InitKontakte(){
       panelBody.appendChild(btn);
     }
   });
+}
+
+// ── Karte hochladen ──────────────────────────────────────────────
+function nt27InitMapUpload() {
+  var ph = document.getElementById('umzug-map');
+  if (!ph) return;
+  var saved = localStorage.getItem('nt27_map');
+  if (saved) {
+    ph.innerHTML =
+      '<img src="'+saved+'" style="width:100%;height:100%;object-fit:contain;border-radius:6px;cursor:pointer" title="Klicken um Karte zu ersetzen">' +
+      '<button onclick="event.stopPropagation();nt27MapReset()" style="position:absolute;top:6px;right:6px;background:rgba(0,0,0,.5);color:#fff;border:none;border-radius:4px;padding:2px 7px;cursor:pointer;font-size:.72rem">✕ entfernen</button>';
+    ph.style.padding='0'; ph.style.position='relative';
+  }
+}
+
+function nt27MapClick() {
+  var inp = document.createElement('input');
+  inp.type='file'; inp.accept='image/*';
+  inp.onchange = function(e) {
+    var file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 4*1024*1024) { alert('Bild zu groß (max. 4 MB). Bitte komprimieren.'); return; }
+    var r = new FileReader();
+    r.onload = function(ev) {
+      localStorage.setItem('nt27_map', ev.target.result);
+      nt27InitMapUpload();
+      nt27Flash();
+    };
+    r.readAsDataURL(file);
+  };
+  inp.click();
+}
+
+function nt27MapReset() {
+  if (!confirm('Kartenbild entfernen?')) return;
+  localStorage.removeItem('nt27_map');
+  var ph = document.getElementById('umzug-map');
+  if (ph) {
+    ph.style.padding=''; ph.style.position='';
+    ph.innerHTML =
+      '<span id="umzug-map-icon">🗺</span>' +
+      '<span id="umzug-map-label">Karte: Zugstrecke Boll</span>' +
+      '<span style="font-size:.75rem;font-weight:400">Start: Festplatz · Ziel: Dorfplatz · ca. 2,2 km</span>' +
+      '<span style="font-size:.7rem;color:#aaa;margin-top:4px">📁 Klicken um Kartenbild hochzuladen</span>';
+  }
+  nt27Flash();
+}
+
+// ── Zunft-Pool: Angemeldete Zünfte noch nicht im Aufstellungsplan ─
+function nt27normName(s) {
+  return (s||'').toLowerCase().replace(/[^a-züäöß]/gi,' ').replace(/\s+/g,' ').trim();
+}
+
+function nt27keyWord(name) {
+  var stop = ['narrenzunft','narrenverein','narren','zunft','verein','boll','sauldorf'];
+  var words = nt27normName(name).split(' ').filter(function(w){ return w.length >= 5; });
+  for (var i=0; i<words.length; i++) {
+    if (stop.indexOf(words[i]) === -1) return words[i];
+  }
+  return nt27normName(name).substring(0, 8);
+}
+
+function nt27GetZugKeys() {
+  var keys = new Set();
+  document.querySelectorAll('#zugTbl tbody tr').forEach(function(row) {
+    var hasHandle = !!row.querySelector('.nt27-handle');
+    var cell = row.cells[hasHandle ? 2 : 1];
+    if (cell) keys.add(nt27keyWord(cell.textContent));
+  });
+  return keys;
+}
+
+function nt27RenderZunftPool() {
+  var body   = document.getElementById('zunft-pool-body');
+  var badge  = document.getElementById('pool-badge');
+  if (!body) return;
+
+  // Alle angemeldeten Zünfte aus der Zunftanmeldungs-Tabelle lesen
+  var all = [];
+  document.querySelectorAll('#zunftTabelle tbody tr').forEach(function(row) {
+    if (row.querySelector('td[colspan]')) return;
+    var nameEl = row.querySelector('strong');
+    if (!nameEl) return;
+    var name = nameEl.textContent.trim();
+    if (!name || name === '…') return;
+    var hasHandle = !!row.querySelector('.nt27-handle');
+    var ortCell = row.cells[hasHandle ? 3 : 2];
+    var tnCell  = row.cells[hasHandle ? 8 : 7];
+    all.push({
+      name: name,
+      ort:  (ortCell  ? ortCell.textContent  : '').replace(/[✕⠿]/g,'').trim(),
+      tn:   (tnCell   ? tnCell.textContent   : '').replace(/[✕⠿]/g,'').trim()
+    });
+  });
+
+  if (all.length === 0) {
+    body.innerHTML = '<div style="padding:14px;color:#aaa;font-size:.83rem">ℹ Zuerst den Tab „Zunftanmeldung" einmal öffnen, dann hier aktualisieren.</div>';
+    if (badge) badge.textContent = '—';
+    return;
+  }
+
+  // Bereits eingeplante Schlüsselwörter
+  var planned = nt27GetZugKeys();
+
+  // Filtern: nur die die NICHT im Aufstellungsplan sind
+  var pool = all.filter(function(z) {
+    var kw = nt27keyWord(z.name);
+    return !planned.has(kw);
+  });
+
+  if (badge) badge.textContent = pool.length === 0 ? '✅ alle eingeplant' : pool.length + ' noch offen';
+
+  if (pool.length === 0) {
+    body.innerHTML = '<div style="padding:14px;color:#4caf50;font-size:.85rem">✅ Alle angemeldeten Zünfte sind im Aufstellungsplan.</div>';
+    return;
+  }
+
+  var html = '<div style="padding:8px 12px"><table class="tbl" style="font-size:.82rem">' +
+    '<thead><tr><th>Zunft / Gruppe</th><th>Ort</th><th>TN</th><th style="width:130px"></th></tr></thead><tbody>';
+  pool.forEach(function(z) {
+    html += '<tr>' +
+      '<td><strong>'+nt27Escape(z.name)+'</strong></td>' +
+      '<td>'+nt27Escape(z.ort)+'</td>' +
+      '<td>'+nt27Escape(z.tn)+'</td>' +
+      '<td><button class="btn btn-sm btn-primary" style="font-size:.74rem;padding:3px 10px" ' +
+        'data-zname="'+nt27Escape(z.name)+'" data-zort="'+nt27Escape(z.ort)+'" data-ztn="'+nt27Escape(z.tn)+'" ' +
+        'onclick="nt27AddToUmzug(this.dataset.zname,this.dataset.zort,this.dataset.ztn)">➕ Einplanen</button></td>' +
+      '</tr>';
+  });
+  html += '</tbody></table></div>';
+  body.innerHTML = html;
+}
+
+function nt27AddToUmzug(name, ort, tn) {
+  var tbody = document.querySelector('#zugTbl tbody');
+  if (!tbody) return;
+
+  var hasHandle = !!tbody.querySelector('.nt27-handle');
+  var realRows  = Array.from(tbody.rows).filter(function(r){ return !r.querySelector('td[colspan]'); });
+  var nr = realRows.length + 1;
+
+  var tr = document.createElement('tr');
+  tr.innerHTML =
+    (hasHandle ? '<td class="nt27-handle">⠿</td>' : '') +
+    '<td>'+nr+'</td>' +
+    '<td><strong>'+nt27Escape(name)+'</strong></td>' +
+    '<td>'+nt27Escape(ort)+'</td>' +
+    '<td>—</td>' +
+    '<td>'+nt27Escape(tn||'—')+'</td>' +
+    '<td>—</td>' +
+    '<td>—</td>' +
+    '<td style="color:#999;font-style:italic">Neu eingeplant</td>';
+  tbody.appendChild(tr);
+
+  // NT27 binden & speichern
+  if (window._nt27umzug) {
+    nt27BindRows(tbody, 'umzug', {skipNr:true});
+    nt27SaveTable(tbody, 'umzug');
+  } else {
+    localStorage.setItem('nt27_t_umzug', tbody.innerHTML);
+    nt27Flash();
+  }
+
+  // Neue Zeile kurz gelblich hervorheben + scrollen
+  tr.style.transition = 'background .6s';
+  tr.style.background = '#fffde7';
+  setTimeout(function(){ tr.style.background = ''; }, 2500);
+  tr.scrollIntoView({ behavior:'smooth', block:'center' });
+
+  // Badge Aufstellungsplan aktualisieren
+  var apBadge = document.querySelector('#aufstellungsplan .panel-head .badge');
+  if (apBadge) apBadge.textContent = tbody.rows.length + ' Gruppen · Start 13:30';
+
+  // Pool neu rendern
+  nt27RenderZunftPool();
 }
 
 // ── HTML escapen ─────────────────────────────────────────────────
