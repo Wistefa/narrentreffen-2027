@@ -2301,7 +2301,8 @@ tr[draggable="true"]{cursor:default}
         <div class="form-group" style="grid-column:1/-1"><label>Adresse</label><input placeholder="Straße, PLZ Ort"></div>
         <div class="form-group" style="grid-column:1/-1"><label>Bemerkung</label><input placeholder="z.B. Zuständig für..."></div>
         <div class="form-group" style="grid-column:1/-1">
-          <button class="btn btn-primary" style="width:100%">✅ Kontakt speichern</button>
+          <button class="btn btn-primary" style="width:100%" onclick="kontaktSpeichern(this)">✅ Kontakt speichern</button>
+          <div id="kontakt-msg" style="margin-top:8px;font-size:.82rem"></div>
         </div>
       </div>
     </div>
@@ -4805,6 +4806,19 @@ function nt27InitProgramm(){
 
 // ── Kontakte: CRUD ───────────────────────────────────────────────
 function nt27InitKontakte(){
+  var sec=document.getElementById('kontakte');
+  if(!sec) return;
+
+  // 1. Section-Title Span
+  var span=sec.querySelector('.section-title span');
+  if(span){
+    var svs=localStorage.getItem('nt27_kont_span'); if(svs!==null) span.textContent=svs;
+    span.contentEditable='true'; span.title='Klicken zum Bearbeiten';
+    span.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();this.blur();}});
+    span.addEventListener('blur',function(){ localStorage.setItem('nt27_kont_span',span.textContent); nt27Flash(); });
+  }
+
+  // 2. Alle Kontakt-Tabellen: Rows editierbar, laden, Badge-Update
   document.querySelectorAll('.kontakt-tbl').forEach(function(tbl,i){
     if(!tbl.id) tbl.id='ktbl-'+i;
     var saveKey='kont-'+i;
@@ -4819,7 +4833,7 @@ function nt27InitKontakte(){
     var saved=localStorage.getItem('nt27_t_'+saveKey);
     if(saved) tbody.innerHTML=saved;
     nt27BindRows(tbody,saveKey,{skipNr:false});
-    // Add Kontakt button
+    // Neuer Kontakt per Panel-Button
     if(panel && !panel.querySelector('.nt27-add-kontakt')){
       var panelBody=panel.querySelector('.panel-body');
       var cols=thead?thead.cells.length-1:5;
@@ -4829,7 +4843,68 @@ function nt27InitKontakte(){
       btn.onclick=(function(tb,sk,c){ return function(){nt27AddRow(tb,sk,c,{skipNr:false});}; })(tbody,saveKey,cols);
       panelBody.appendChild(btn);
     }
+    // Badge-Update (z.B. "10 Personen", "32 Zünfte")
+    var badge=panel?panel.querySelector('.panel-head .badge'):null;
+    if(badge&&tbody){
+      var suffix=badge.textContent.replace(/^\d+\s*/,'').trim()||'Einträge';
+      var updateBadge=(function(b,tb,s){
+        return function(){ b.textContent=tb.rows.length+' '+s; };
+      })(badge,tbody,suffix);
+      new MutationObserver(updateBadge).observe(tbody,{childList:true});
+      updateBadge();
+    }
   });
+}
+
+function kontaktSpeichern(btn){
+  var sec=document.getElementById('kontakte');
+  var formPanel=sec.querySelector('.panel[data-gruppe=""]')||sec.querySelector('.panel:not([data-gruppe])');
+  var inputs=formPanel.querySelectorAll('.form-grid input');
+  var gruppeSelect=formPanel.querySelector('.form-grid select');
+  var gruppe=gruppeSelect.value;
+  var funktion=(inputs[0]||{}).value||''; funktion=funktion.trim();
+  var name=(inputs[1]||{}).value||''; name=name.trim();
+  var tel=(inputs[2]||{}).value||''; tel=tel.trim();
+  var mobil=(inputs[3]||{}).value||''; mobil=mobil.trim();
+  var email=(inputs[4]||{}).value||''; email=email.trim();
+  var adresse=(inputs[5]||{}).value||''; adresse=adresse.trim();
+  var bemerk=(inputs[6]||{}).value||''; bemerk=bemerk.trim();
+  var msg=document.getElementById('kontakt-msg');
+  if(!name){
+    if(msg){msg.textContent='⚠ Bitte Namen eingeben.';msg.style.cssText='color:#c00;font-weight:700;font-size:.82rem';}
+    return;
+  }
+  var gruppeDataMap={'Orgateam':'Orgateam','Vorstand':'Vorstand','Notfall / Behörden':'Notfall','Lieferanten':'Lieferant','Zunftmeister':'Zunft','Unterkünfte / Partner':'Partner'};
+  var dataGruppe=gruppeDataMap[gruppe]||gruppe;
+  var panel=sec.querySelector('.panel[data-gruppe="'+dataGruppe+'"]');
+  if(!panel) return;
+  var tbl=panel.querySelector('.kontakt-tbl'); if(!tbl) return;
+  var tbody=tbl.querySelector('tbody'); if(!tbody) return;
+  var cells;
+  if(gruppe==='Lieferanten'){
+    cells=['<strong>'+nt27Escape(funktion||name)+'</strong>',nt27Escape(name),nt27Escape(tel||'—'),nt27Escape(adresse||'—'),nt27Escape(bemerk||'—'),'<span class="pill pill-gray">Neu</span>'];
+  } else if(gruppe==='Zunftmeister'){
+    cells=['<strong>'+nt27Escape(funktion||name)+'</strong>',nt27Escape(name),nt27Escape(mobil||tel||'—'),nt27Escape(email||'—'),nt27Escape(adresse||'—'),'0'];
+  } else if(gruppe==='Unterkünfte / Partner'){
+    cells=['<strong>'+nt27Escape(funktion||name)+'</strong>',nt27Escape(name),nt27Escape(tel||'—'),nt27Escape(adresse||'—'),'—',nt27Escape(email||'—')];
+  } else {
+    cells=['<strong>'+nt27Escape(funktion||'—')+'</strong>',nt27Escape(name),'<a href="tel:'+nt27Escape(mobil||tel||'')+'">'+nt27Escape(mobil||tel||'—')+'</a>',nt27Escape(email||'—'),nt27Escape(bemerk||adresse||'—')];
+  }
+  var tr=document.createElement('tr');
+  tr.dataset.gruppe=dataGruppe;
+  tr.innerHTML=cells.map(function(c){ return '<td>'+c+'</td>'; }).join('');
+  tbody.appendChild(tr);
+  var tblIdx=tbl.id?tbl.id.replace('ktbl-',''):'0';
+  var saveKey='kont-'+tblIdx;
+  nt27BindRows(tbody,saveKey,{skipNr:false});
+  nt27SaveTable(tbody,saveKey);
+  formPanel.querySelectorAll('.form-grid input').forEach(function(i){i.value='';});
+  gruppeSelect.selectedIndex=0;
+  if(msg){
+    msg.textContent='✅ '+name+' wurde gespeichert!';
+    msg.style.cssText='color:var(--green);font-weight:700;font-size:.82rem';
+    setTimeout(function(){if(msg)msg.textContent='';},4000);
+  }
 }
 
 // ── Karte hochladen ──────────────────────────────────────────────
