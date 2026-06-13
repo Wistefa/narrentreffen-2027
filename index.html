@@ -910,33 +910,33 @@ tr[draggable="true"]{cursor:default}
 
 <!-- ═══════════════════════════════════════════ UNTERKUNFT ═══════════════════════════════ -->
 <section class="section" id="unterkunft">
-  <div class="section-title">🏨 Unterkunftsverwaltung <span>14 Partnerbetriebe</span></div>
-  <div class="alert alert-gold">🛏 Frühzeitig buchen! Für die Nacht 6./7. Februar sind bereits 68 % der Partnerkapazitäten belegt.</div>
+  <div class="section-title">🏨 Unterkunftsverwaltung <span id="unterkunftTitel">14 Partnerbetriebe</span></div>
+  <div class="alert alert-gold" id="unterkunftAlert">🛏 Frühzeitig buchen! Für die Nacht 6./7. Februar sind bereits 68 % der Partnerkapazitäten belegt.</div>
 
   <div class="cards">
-    <div class="card"><div class="card-val">14</div><div class="card-label">Partnerbetriebe</div></div>
-    <div class="card"><div class="card-val">486</div><div class="card-label">Betten gesamt</div></div>
-    <div class="card"><div class="card-val gold">329</div><div class="card-label">Betten belegt</div><div class="card-sub">Sa/So-Nacht</div></div>
-    <div class="card"><div class="card-val green">157</div><div class="card-label">Betten frei</div><div class="card-sub">Sa/So-Nacht</div></div>
-    <div class="card"><div class="card-val">3</div><div class="card-label">Sporthallen Notlager</div><div class="card-sub">à 80 Plätze</div></div>
+    <div class="card"><div class="card-val nt27-card-val">14</div><div class="card-label">Partnerbetriebe</div></div>
+    <div class="card"><div class="card-val nt27-card-val">486</div><div class="card-label">Betten gesamt</div></div>
+    <div class="card"><div class="card-val gold nt27-card-val">329</div><div class="card-label">Betten belegt</div><div class="card-sub">Sa/So-Nacht</div></div>
+    <div class="card"><div class="card-val green nt27-card-val">157</div><div class="card-label">Betten frei</div><div class="card-sub">Sa/So-Nacht</div></div>
+    <div class="card"><div class="card-val nt27-card-val">3</div><div class="card-label">Sporthallen Notlager</div><div class="card-sub">à 80 Plätze</div></div>
   </div>
 
   <div class="panel">
     <div class="panel-head">🏨 Partnerbetriebe – Belegungsstand</div>
     <div class="panel-body" style="padding:0">
-      <table class="tbl">
-        <thead><tr><th>Betrieb</th><th>Ort</th><th>Typ</th><th>Betten</th><th>Belegt Fr/Sa</th><th>Belegt Sa/So</th><th>Verfügbar</th><th>Kontakt</th></tr></thead>
+      <table class="tbl" id="unterkunftTbl" style="width:100%">
+        <thead><tr><th>Betrieb</th><th>Ort</th><th>Typ</th><th style="text-align:right">Betten</th><th>Belegt Fr/Sa</th><th>Belegt Sa/So</th><th>Verfügbar</th><th>Kontakt</th></tr></thead>
         <tbody>
-          <tr><td><strong>Gasthof Löwen</strong></td><td>Boll</td><td>Gasthof</td><td>22</td><td><div style="display:flex;gap:8px;align-items:center">22/22<div class="prog-wrap" style="width:60px"><div class="prog-bar full" style="width:100%"></div></div></div></td><td>22/22</td><td><span class="pill pill-red">Voll</span></td><td>07571/1234</td></tr>
-          <tr><td><strong>Hotel Adler</strong></td><td>Sauldorf</td><td>Hotel</td><td>48</td><td><div style="display:flex;gap:8px;align-items:center">38/48<div class="prog-wrap" style="width:60px"><div class="prog-bar" style="width:79%"></div></div></div></td><td>42/48</td><td><span class="pill pill-gold">6 frei</span></td><td>07571/5678</td></tr>
-          <tr><td><strong>Pension Birkle</strong></td><td>Boll</td><td>Pension</td><td>18</td><td>14/18</td><td>18/18</td><td><span class="pill pill-red">Voll (Sa)</span></td><td>07571/9012</td></tr>
-          <tr><td><strong>Gasthof Hirsch</strong></td><td>Meßkirch</td><td>Gasthof</td><td>35</td><td>28/35</td><td>30/35</td><td><span class="pill pill-gold">5 frei</span></td><td>07575/3456</td></tr>
-          <tr><td><strong>Hotel Schwanen</strong></td><td>Krauchenwies</td><td>Hotel</td><td>60</td><td>42/60</td><td>38/60</td><td><span class="pill pill-green">22 frei</span></td><td>07576/7890</td></tr>
-          <tr><td><strong>Jugendherberge Sigmaringen</strong></td><td>Sigmaringen</td><td>JH</td><td>80</td><td>65/80</td><td>72/80</td><td><span class="pill pill-gold">8 frei</span></td><td>07571/1112</td></tr>
-          <tr><td><strong>Ferienwohnungen Boll</strong></td><td>Boll</td><td>FeWo</td><td>24</td><td>24/24</td><td>24/24</td><td><span class="pill pill-red">Voll</span></td><td>07571/2223</td></tr>
-          <tr><td><strong>Gasthof Rössle</strong></td><td>Sauldorf</td><td>Gasthof</td><td>16</td><td>12/16</td><td>14/16</td><td><span class="pill pill-gold">2 frei</span></td><td>07571/3334</td></tr>
-          <tr><td><strong>Sporthalle GS Boll (Notlager)</strong></td><td>Boll</td><td>Notlager</td><td>80</td><td>—</td><td>45/80</td><td><span class="pill pill-green">35 frei</span></td><td>Orga-Team</td></tr>
-          <tr><td colspan="8" style="color:#aaa;font-style:italic;padding:10px 12px">5 weitere Partnerbetriebe…</td></tr>
+          <tr><td>Gasthof Löwen</td><td>Boll</td><td>Gasthof</td><td style="text-align:right">22</td><td>22/22</td><td>22/22</td><td>Voll</td><td>07571/1234</td></tr>
+          <tr><td>Hotel Adler</td><td>Sauldorf</td><td>Hotel</td><td style="text-align:right">48</td><td>38/48</td><td>42/48</td><td>6 frei</td><td>07571/5678</td></tr>
+          <tr><td>Pension Birkle</td><td>Boll</td><td>Pension</td><td style="text-align:right">18</td><td>14/18</td><td>18/18</td><td>Voll (Sa)</td><td>07571/9012</td></tr>
+          <tr><td>Gasthof Hirsch</td><td>Meßkirch</td><td>Gasthof</td><td style="text-align:right">35</td><td>28/35</td><td>30/35</td><td>5 frei</td><td>07575/3456</td></tr>
+          <tr><td>Hotel Schwanen</td><td>Krauchenwies</td><td>Hotel</td><td style="text-align:right">60</td><td>42/60</td><td>38/60</td><td>22 frei</td><td>07576/7890</td></tr>
+          <tr><td>Jugendherberge Sigmaringen</td><td>Sigmaringen</td><td>JH</td><td style="text-align:right">80</td><td>65/80</td><td>72/80</td><td>8 frei</td><td>07571/1112</td></tr>
+          <tr><td>Ferienwohnungen Boll</td><td>Boll</td><td>FeWo</td><td style="text-align:right">24</td><td>24/24</td><td>24/24</td><td>Voll</td><td>07571/2223</td></tr>
+          <tr><td>Gasthof Rössle</td><td>Sauldorf</td><td>Gasthof</td><td style="text-align:right">16</td><td>12/16</td><td>14/16</td><td>2 frei</td><td>07571/3334</td></tr>
+          <tr><td>Sporthalle GS Boll (Notlager)</td><td>Boll</td><td>Notlager</td><td style="text-align:right">80</td><td>—</td><td>45/80</td><td>35 frei</td><td>Orga-Team</td></tr>
+          <tr><td>Sporthalle Sauldorf (Notlager)</td><td>Sauldorf</td><td>Notlager</td><td style="text-align:right">80</td><td>—</td><td>—</td><td>80 frei</td><td>Orga-Team</td></tr>
         </tbody>
       </table>
     </div>
@@ -3095,9 +3095,10 @@ function show(id, btn) {
     var _ztb2 = document.querySelector('#zunftTabelle tbody');
     if (_ztb2) nt27UpdateZunftCount(_ztb2);
   }
-  if (id === 'kontakte' && !window._nt27kontakte)  { window._nt27kontakte = true; nt27InitKontakte(); }
-  if (id === 'finanzen' && !window._nt27finanzen)  { window._nt27finanzen = true; nt27InitFinanzen(); }
-  if (id === 'programm' && !window._nt27programm)  { window._nt27programm = true; nt27InitProgramm(); }
+  if (id === 'kontakte'   && !window._nt27kontakte)   { window._nt27kontakte   = true; nt27InitKontakte(); }
+  if (id === 'finanzen'   && !window._nt27finanzen)   { window._nt27finanzen   = true; nt27InitFinanzen(); }
+  if (id === 'programm'   && !window._nt27programm)   { window._nt27programm   = true; nt27InitProgramm(); }
+  if (id === 'unterkunft' && !window._nt27unterkunft) { window._nt27unterkunft = true; nt27InitUnterkunft(); }
 }
 
 // ── Chart: Anmeldungsverlauf ─────────────────────────────────────────────────
@@ -4133,6 +4134,30 @@ function nt27SaveTable(tbody, saveKey){
 }
 
 // ── Finanzen: Inline-Edit + Zeilen hinzufügen ───────────────────
+// ── Unterkunft: Inline-Edit ──────────────────────────────────────
+function nt27InitUnterkunft(){
+  // Partnerbetriebe-Tabelle
+  nt27InitTable('unterkunftTbl','unterkunft',{});
+
+  // Alert-Banner editierbar
+  var alert=document.getElementById('unterkunftAlert');
+  if(alert){ alert.contentEditable='true'; alert.addEventListener('blur',function(){ localStorage.setItem('nt27_unterkunft_alert',alert.innerHTML); nt27Flash(); }); var sa=localStorage.getItem('nt27_unterkunft_alert'); if(sa) alert.innerHTML=sa; }
+
+  // Titel-Span editierbar
+  var titel=document.getElementById('unterkunftTitel');
+  if(titel){ titel.contentEditable='true'; titel.addEventListener('blur',function(){ localStorage.setItem('nt27_unterkunft_titel',titel.textContent); nt27Flash(); }); var st=localStorage.getItem('nt27_unterkunft_titel'); if(st) titel.textContent=st; }
+
+  // Karten-Werte editierbar
+  var sec=document.getElementById('unterkunft');
+  if(sec) sec.querySelectorAll('.nt27-card-val').forEach(function(el,i){
+    var key='nt27_uk_card_'+i;
+    var saved=localStorage.getItem(key); if(saved) el.textContent=saved;
+    el.contentEditable='true'; el.title='Klicken zum Bearbeiten';
+    el.addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); this.blur(); } });
+    el.addEventListener('blur',function(){ localStorage.setItem(key,el.textContent); nt27Flash(); });
+  });
+}
+
 function nt27InitFinanzen(){
   if(document.getElementById('finEinnTbl')&&!window._nt27finEinn){
     window._nt27finEinn=true;
