@@ -4894,7 +4894,7 @@ function nt27InitSponsoren(){
 
   // 4. Sponsor-Tier-Karten: Body-Div (children[3] jeder .sp-tier)
   sec.querySelectorAll('.sp-tier').forEach(function(tier,i){
-    var body=tier.children[3]; if(!body) return;
+    var body=tier.querySelector('.sp-tier-body'); if(!body) return;
     var key='nt27_sp_tier_'+i; var sv=localStorage.getItem(key); if(sv!==null) body.innerHTML=sv;
     body.contentEditable='true';
     body.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();this.blur();}});
