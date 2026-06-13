@@ -476,44 +476,25 @@ tr[draggable="true"]{cursor:default}
 <section class="section" id="umzug">
   <div class="section-title">🎭 Umzugsplanung <span>Sonntag, 7. Feb. 2027 · 13:30 Uhr</span></div>
 
-  <div class="grid2">
-    <div class="panel">
-      <div class="panel-head">🗺 Zugstrecke & Aufstellungsplan</div>
-      <div class="panel-body">
-        <div class="map-ph" id="umzug-map" onclick="nt27MapClick()" title="Klicken zum Hochladen eines Kartenbildes (JPG/PNG)" style="cursor:pointer">
-          <span id="umzug-map-icon">🗺</span>
-          <span id="umzug-map-label">Karte: Zugstrecke Boll</span>
-          <span style="font-size:.75rem;font-weight:400">Start: Festplatz · Ziel: Dorfplatz · ca. 2,2 km</span>
-          <span style="font-size:.7rem;color:#aaa;margin-top:4px">📁 Klicken um Kartenbild hochzuladen</span>
-        </div>
-        <div style="margin-top:14px;font-size:.82rem">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-            <div><strong>Startzeit:</strong> 13:30 Uhr</div>
-            <div><strong>Aufstellbeginn:</strong> 12:00 Uhr</div>
-            <div><strong>Zugstrecke:</strong> ca. 2,2 km</div>
-            <div><strong>Dauer:</strong> ca. 2,5 Stunden</div>
-            <div><strong>Angemeldete Zünfte:</strong> 28</div>
-            <div><strong>Teilnehmer Umzug:</strong> ~1.600</div>
-          </div>
-        </div>
+  <div class="panel">
+    <div class="panel-head">🗺 Zugstrecke — Sauldorf-Boll
+      <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+        <a href="https://www.google.com/maps/search/Boll,+Sauldorf,+Baden-Württemberg" target="_blank"
+           style="font-size:.78rem;padding:4px 12px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.4);border-radius:20px;color:#fff;text-decoration:none">📍 In Google Maps öffnen</a>
       </div>
     </div>
-
-    <div class="panel">
-      <div class="panel-head">🔢 Aufstellungsreihenfolge <div class="panel-head badge">28 Zünfte</div></div>
-      <div class="panel-body" style="max-height:440px;overflow-y:auto;padding:10px">
-        <div class="zug-lane">
-          <div class="zug-num"><div class="zug-nr">1</div><div class="zug-info"><h4>Binkerzunft Boll e.V.</h4><p>Gastgeber · Bienenhäs · 120 TN</p></div><div class="zug-count">120 TN</div></div>
-          <div class="zug-num"><div class="zug-nr">2</div><div class="zug-info"><h4>Musikverein Boll</h4><p>Blaskapelle · Eröffnungsmarsch</p></div><div class="zug-count">40 TN</div></div>
-          <div class="zug-num"><div class="zug-nr">3</div><div class="zug-info"><h4>Schneckenburg Konstanz</h4><p>Bodenseenarren · Hansele</p></div><div class="zug-count">90 TN</div></div>
-          <div class="zug-num"><div class="zug-nr">4</div><div class="zug-info"><h4>Narrenzunft Meßkirch</h4><p>Schloßnarren · Bläsergruppe</p></div><div class="zug-count">68 TN</div></div>
-          <div class="zug-num"><div class="zug-nr">5</div><div class="zug-info"><h4>Gauchenzunft Mühlheim</h4><p>Gauchen · Federhasen</p></div><div class="zug-count">62 TN</div></div>
-          <div class="zug-num"><div class="zug-nr">6</div><div class="zug-info"><h4>Hemdglunkerzunft Immendingen</h4><p>Hemdglunker · Guggenmusik</p></div><div class="zug-count">55 TN</div></div>
-          <div class="zug-num"><div class="zug-nr">7</div><div class="zug-info"><h4>Federhansen Sauldorf</h4><p>Federhasen · Peitschenklatscher</p></div><div class="zug-count">52 TN</div></div>
-          <div class="zug-num"><div class="zug-nr">8</div><div class="zug-info"><h4>Sumpfnarren Krauchenwies</h4><p>Sumpfnarren · Hexengruppe</p></div><div class="zug-count">47 TN</div></div>
-          <div class="zug-num"><div class="zug-nr">9</div><div class="zug-info"><h4>Narrenverein Pfullendorf</h4><p>Narrenschiff · Marketenderinnen</p></div><div class="zug-count">85 TN</div></div>
-          <div class="zug-num"><div class="zug-nr">10</div><div class="zug-info"><h4>Narrenzunft Fridingen</h4><p>Fridinger Narren · Schalmei</p></div><div class="zug-count">44 TN</div></div>
-          <div class="zug-num" style="opacity:.5"><div class="zug-nr">…</div><div class="zug-info"><h4>18 weitere Zünfte</h4><p>Aufstellung folgt nach Anmeldeschluss</p></div><div class="zug-count">~900 TN</div></div>
+    <div class="panel-body" style="padding:16px">
+      <div id="umzug-map" style="position:relative;min-height:420px;border-radius:8px;overflow:hidden;background:#e8f5e9">
+        <!-- wird durch nt27InitMapUpload() befüllt -->
+      </div>
+      <div style="margin-top:14px;font-size:.82rem">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+          <div><strong>Startzeit:</strong> 13:30 Uhr</div>
+          <div><strong>Aufstellbeginn:</strong> 12:00 Uhr</div>
+          <div><strong>Zugstrecke:</strong> ca. 2,2 km</div>
+          <div><strong>Dauer:</strong> ca. 2,5 Stunden</div>
+          <div><strong>Startpunkt:</strong> Festplatz Boll</div>
+          <div><strong>Ziel:</strong> Dorfplatz Boll</div>
         </div>
       </div>
     </div>
@@ -4193,12 +4174,17 @@ function nt27InitKontakte(){
 function nt27InitMapUpload() {
   var ph = document.getElementById('umzug-map');
   if (!ph) return;
+  ph.style.position = 'relative';
   var saved = localStorage.getItem('nt27_map');
   if (saved) {
     ph.innerHTML =
-      '<img src="'+saved+'" style="width:100%;height:100%;object-fit:contain;border-radius:6px;cursor:pointer" title="Klicken um Karte zu ersetzen">' +
-      '<button onclick="event.stopPropagation();nt27MapReset()" style="position:absolute;top:6px;right:6px;background:rgba(0,0,0,.5);color:#fff;border:none;border-radius:4px;padding:2px 7px;cursor:pointer;font-size:.72rem">✕ entfernen</button>';
-    ph.style.padding='0'; ph.style.position='relative';
+      '<img src="'+saved+'" style="width:100%;height:420px;object-fit:contain;border-radius:6px;display:block">' +
+      '<button onclick="nt27MapClick()" style="position:absolute;bottom:10px;right:130px;background:rgba(255,255,255,.92);border:1px solid #bbb;border-radius:6px;padding:5px 10px;cursor:pointer;font-size:.78rem;box-shadow:0 1px 4px rgba(0,0,0,.2)">📁 Bild ersetzen</button>' +
+      '<button onclick="nt27MapReset()" style="position:absolute;bottom:10px;right:10px;background:rgba(198,40,40,.9);color:#fff;border:none;border-radius:6px;padding:5px 10px;cursor:pointer;font-size:.78rem">✕ entfernen</button>';
+  } else {
+    ph.innerHTML =
+      '<iframe src="https://maps.google.com/maps?q=Boll,+Sauldorf,+Baden-W%C3%BCrttemberg,+Deutschland&output=embed&z=15" style="width:100%;height:420px;border:none;display:block" allowfullscreen loading="lazy"></iframe>' +
+      '<button onclick="nt27MapClick()" style="position:absolute;bottom:10px;right:10px;background:rgba(255,255,255,.92);border:1px solid #bbb;border-radius:6px;padding:5px 11px;cursor:pointer;font-size:.78rem;box-shadow:0 1px 4px rgba(0,0,0,.2)">📁 Eigenes Routenbild hochladen</button>';
   }
 }
 
@@ -4223,15 +4209,7 @@ function nt27MapClick() {
 function nt27MapReset() {
   if (!confirm('Kartenbild entfernen?')) return;
   localStorage.removeItem('nt27_map');
-  var ph = document.getElementById('umzug-map');
-  if (ph) {
-    ph.style.padding=''; ph.style.position='';
-    ph.innerHTML =
-      '<span id="umzug-map-icon">🗺</span>' +
-      '<span id="umzug-map-label">Karte: Zugstrecke Boll</span>' +
-      '<span style="font-size:.75rem;font-weight:400">Start: Festplatz · Ziel: Dorfplatz · ca. 2,2 km</span>' +
-      '<span style="font-size:.7rem;color:#aaa;margin-top:4px">📁 Klicken um Kartenbild hochzuladen</span>';
-  }
+  nt27InitMapUpload();
   nt27Flash();
 }
 
