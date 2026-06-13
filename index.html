@@ -4342,7 +4342,7 @@ function nt27InitLogistik(){
   parkEntries.forEach(function(entry,i){
     var nameSpan=entry.querySelector('div > span:first-child');
     var capSpan=entry.querySelector('div > span:last-child');
-    var subDiv=entry.querySelector('div[style*="color:#888"]');
+    var subDiv=entry.children[2]||null;
     [
       {el:nameSpan, key:'nt27_logi_park_name_'+i},
       {el:capSpan,  key:'nt27_logi_park_cap_'+i},
