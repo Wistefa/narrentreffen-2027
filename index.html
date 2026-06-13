@@ -107,12 +107,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 /* ── SCHEDULE ── */
 .day-header{background:var(--black);color:var(--gold);padding:10px 18px;border-radius:8px;font-weight:800;margin-bottom:12px;font-size:.95rem}
-.sched-item{display:flex;gap:14px;padding:10px 14px;border-left:4px solid var(--gold);background:white;border-radius:0 8px 8px 0;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.sched-item{display:flex;gap:14px;padding:10px 14px;padding-right:60px;border-left:4px solid var(--gold);background:white;border-radius:0 8px 8px 0;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,.06);position:relative}
 .sched-time{font-size:.8rem;font-weight:800;color:var(--gold-dark);min-width:55px}
 .sched-title{font-size:.88rem;font-weight:700}
 .sched-loc{font-size:.72rem;color:#888;margin-top:2px}
 .sched-item.highlight{border-color:var(--red);background:#fff8f8}
 .sched-item.green{border-color:var(--green);background:#f0fff4}
+.nt27-prog-del,.nt27-prog-style{position:absolute;border:none;background:transparent;cursor:pointer;padding:3px 5px;border-radius:3px;font-size:.72rem;line-height:1;top:7px}
+.nt27-prog-del{right:4px;color:#c00;opacity:.35}
+.nt27-prog-del:hover{opacity:1;background:#fdd}
+.nt27-prog-style{right:26px;opacity:.3;color:#555}
+.nt27-prog-style:hover{opacity:1;background:#f0f0f0}
 
 /* ── KANBAN / HELFER ── */
 .kanban{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
@@ -884,7 +889,7 @@ tr[draggable="true"]{cursor:default}
   <div class="panel" style="margin-top:20px">
     <div class="panel-head">🏛 Veranstaltungsorte</div>
     <div class="panel-body" style="padding:0">
-      <table class="tbl">
+      <table class="tbl" id="progVenuesTbl">
         <thead><tr><th>Ort</th><th>Kapazität</th><th>Zweck</th><th>Ausstattung</th><th>Verantwortlich</th></tr></thead>
         <tbody>
           <tr style="background:#fff9e0"><td><strong>🏟 Reithalle Boll</strong></td><td><strong>3.000 Personen</strong></td><td>Großer Brauchtumsabend (Sa), Kindernachmittag (So)</td><td>Bühne, PA, Licht, Bar, Heizung, Bestuhlung/Stehplätze</td><td>Hans Müller</td></tr>
@@ -4137,17 +4142,87 @@ function nt27SaveFinanzen(fin){
 function nt27InitProgramm(){
   var prog=document.getElementById('programm');
   if(!prog) return;
+  var grid=prog.querySelector('.grid3');
+  if(!grid) return;
+
+  // Restore saved schedule (saved without NT27 buttons)
   var saved=localStorage.getItem('nt27_prog');
-  if(saved){ var sg=prog.querySelector('.sched-grid'); if(sg) sg.innerHTML=saved; }
-  prog.querySelectorAll('.sched-time,.sched-title,.sched-loc').forEach(function(el){
-    el.contentEditable='true'; el.style.cursor='text';
-    el.addEventListener('blur',function(){
-      var sg=prog.querySelector('.sched-grid');
-      if(sg) localStorage.setItem('nt27_prog',sg.innerHTML);
-      nt27Flash();
-    });
-    el.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();this.blur();}});
+  if(saved) grid.innerHTML=saved;
+
+  // Save: clone grid, strip NT27 buttons, store clean HTML
+  function saveProg(){
+    var clone=grid.cloneNode(true);
+    clone.querySelectorAll('.nt27-prog-del,.nt27-prog-style,.nt27-prog-add').forEach(function(el){ el.remove(); });
+    localStorage.setItem('nt27_prog',clone.innerHTML);
+    nt27Flash();
+  }
+
+  // Day headers editable
+  prog.querySelectorAll('.day-header').forEach(function(h){
+    h.contentEditable='true';
+    h.addEventListener('blur',saveProg);
+    h.addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); this.blur(); } });
   });
+
+  // Bind a single sched-item: add editable fields + style + delete buttons
+  function bindItem(item){
+    item.querySelectorAll('.sched-time,.sched-title,.sched-loc').forEach(function(el){
+      el.contentEditable='true';
+      el.addEventListener('blur',saveProg);
+      el.addEventListener('keydown',function(e){ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); this.blur(); } });
+    });
+    if(!item.querySelector('.nt27-prog-style')){
+      var sb=document.createElement('button');
+      sb.className='nt27-prog-style'; sb.innerHTML='🎨'; sb.title='Stil: Normal → Gelb → Grün';
+      sb.onmousedown=function(e){ e.preventDefault(); };
+      sb.onclick=function(e){
+        e.stopPropagation();
+        if(item.classList.contains('highlight')){ item.classList.remove('highlight'); item.classList.add('green'); }
+        else if(item.classList.contains('green')){ item.classList.remove('green'); }
+        else{ item.classList.add('highlight'); }
+        saveProg();
+      };
+      item.appendChild(sb);
+    }
+    if(!item.querySelector('.nt27-prog-del')){
+      var db=document.createElement('button');
+      db.className='nt27-prog-del'; db.innerHTML='✕'; db.title='Termin löschen';
+      db.onmousedown=function(e){ e.preventDefault(); };
+      db.onclick=function(e){
+        e.stopPropagation();
+        if(confirm('Termin löschen?')){ item.remove(); saveProg(); }
+      };
+      item.appendChild(db);
+    }
+  }
+
+  // Bind existing items
+  prog.querySelectorAll('.sched-item').forEach(bindItem);
+
+  // "Termin hinzufügen" button per day column
+  grid.querySelectorAll(':scope > div').forEach(function(col){
+    if(col.querySelector('.nt27-prog-add')) return;
+    var btn=document.createElement('button');
+    btn.className='btn btn-outline nt27-prog-add';
+    btn.style.cssText='width:100%;margin-top:8px;font-size:.8rem';
+    btn.innerHTML='➕ Termin hinzufügen';
+    btn.onclick=function(){
+      var ni=document.createElement('div');
+      ni.className='sched-item';
+      ni.innerHTML='<div class="sched-time">00:00</div><div><div class="sched-title">Neuer Termin</div><div class="sched-loc">📍 Ort</div></div>';
+      col.insertBefore(ni,btn);
+      bindItem(ni);
+      saveProg();
+      ni.querySelector('.sched-time').focus();
+    };
+    col.appendChild(btn);
+  });
+
+  // Veranstaltungsorte table via nt27InitTable
+  if(document.getElementById('progVenuesTbl') && !window._nt27venues){
+    window._nt27venues=true;
+    nt27InitTable('progVenuesTbl','prog_venues',{});
+  }
 }
 
 // ── Kontakte: CRUD ───────────────────────────────────────────────
