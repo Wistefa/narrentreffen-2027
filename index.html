@@ -2427,7 +2427,7 @@ tr[draggable="true"]{cursor:default}
   <div class="panel" style="margin-top:20px">
     <div class="panel-head">🎤 Bühne & Backstage</div>
     <div class="panel-body" style="padding:0">
-      <table class="tbl">
+      <table class="tbl" id="reitBuehneTbl">
         <thead><tr><th>Pos.</th><th>Beschreibung</th><th>Menge</th><th>Lieferant / Beschaffung</th><th>Aufbautag</th><th>Status</th><th>Kosten</th></tr></thead>
         <tbody>
           <tr><td>B1</td><td><strong>Bühnenpodest</strong> – Modulbühne, 12 m × 8 m, Höhe 80 cm, mit Treppe links + rechts</td><td>1 Set</td><td>Event-Stage Meßkirch</td><td>Do 4. Feb</td><td><span class="pill pill-green">Bestätigt</span></td><td>2.800 €</td></tr>
@@ -2449,7 +2449,7 @@ tr[draggable="true"]{cursor:default}
   <div class="panel" style="margin-top:20px">
     <div class="panel-head">🔊 PA-Anlage / Beschallung</div>
     <div class="panel-body" style="padding:0">
-      <table class="tbl">
+      <table class="tbl" id="reitPaTbl">
         <thead><tr><th>Pos.</th><th>Beschreibung</th><th>Menge</th><th>Lieferant</th><th>Aufbautag</th><th>Status</th><th>Kosten</th></tr></thead>
         <tbody>
           <tr><td>P1</td><td><strong>Haupt-PA Top</strong> – Line-Array je Seite (min. 2×3 Elemente), 3.000 W RMS gesamt</td><td>2 Arrays</td><td>Sound & More Sigmaringen</td><td>Do 4. Feb</td><td><span class="pill pill-green">Bestätigt</span></td><td>1.800 €</td></tr>
@@ -2471,7 +2471,7 @@ tr[draggable="true"]{cursor:default}
   <div class="panel" style="margin-top:20px">
     <div class="panel-head">💡 Licht & Effekte</div>
     <div class="panel-body" style="padding:0">
-      <table class="tbl">
+      <table class="tbl" id="reitLichtTbl">
         <thead><tr><th>Pos.</th><th>Beschreibung</th><th>Menge</th><th>Lieferant</th><th>Aufbautag</th><th>Status</th><th>Kosten</th></tr></thead>
         <tbody>
           <tr><td>L1</td><td><strong>Bühnenbeleuchtung</strong> – 6× Moving Head Wash (RGBW), 4× PAR-LED Spot auf Traverse</td><td>10 Stk</td><td>Licht-Profi Sigmaringen</td><td>Do 4. Feb</td><td><span class="pill pill-gold">Anfrage</span></td><td>~800 €</td></tr>
@@ -2491,7 +2491,7 @@ tr[draggable="true"]{cursor:default}
   <div class="panel" style="margin-top:20px">
     <div class="panel-head">🍺 Bar & Ausschank (3 Stationen)</div>
     <div class="panel-body" style="padding:0">
-      <table class="tbl">
+      <table class="tbl" id="reitBarTbl">
         <thead><tr><th>Pos.</th><th>Beschreibung</th><th>Menge</th><th>Beschaffung</th><th>Aufbautag</th><th>Status</th><th>Kosten</th></tr></thead>
         <tbody>
           <tr style="background:#fff5ee"><td colspan="7" style="font-weight:700;color:#e65100;padding:8px 12px">🍺 Hauptbar (hinten Mitte) – 12 m Tresen</td></tr>
@@ -2518,7 +2518,7 @@ tr[draggable="true"]{cursor:default}
   <div class="panel" style="margin-top:20px">
     <div class="panel-head">🪑 Mobiliar, Bestuhlung & Ausstattung</div>
     <div class="panel-body" style="padding:0">
-      <table class="tbl">
+      <table class="tbl" id="reitMobiliarTbl">
         <thead><tr><th>Pos.</th><th>Beschreibung</th><th>Menge</th><th>Beschaffung</th><th>Aufbautag</th><th>Status</th><th>Kosten</th></tr></thead>
         <tbody>
           <tr><td>M1</td><td><strong>Bierbank-Garnituren</strong> – 200 cm × 50 cm, je 2 Bänke à 10 Pers.</td><td>60 Garnituren</td><td>Vereinsbestand + Leihware Nachbarvereine</td><td>Do–Fr 4.–5. Feb</td><td><span class="pill pill-gold">Ausstehend (20 fehlen)</span></td><td>—</td></tr>
@@ -2539,7 +2539,7 @@ tr[draggable="true"]{cursor:default}
   <div class="panel" style="margin-top:20px">
     <div class="panel-head">⚡ Strom & Elektrik</div>
     <div class="panel-body" style="padding:0">
-      <table class="tbl">
+      <table class="tbl" id="reitStromTbl">
         <thead><tr><th>Pos.</th><th>Beschreibung</th><th>Menge</th><th>Beschaffung</th><th>Aufbautag</th><th>Status</th><th>Kosten</th></tr></thead>
         <tbody>
           <tr><td>E1</td><td><strong>Elektroanschluss Reithalle prüfen</strong> – Hauptverteiler Kapazität (min. 63 A/3-Phasen für PA + Licht)</td><td>Prüfung</td><td>Elektriker / Hallenbetreiber</td><td>Do 4. Feb</td><td><span class="pill pill-red">Klären!</span></td><td>—</td></tr>
@@ -2557,7 +2557,7 @@ tr[draggable="true"]{cursor:default}
   <div class="panel" style="margin-top:20px">
     <div class="panel-head">🚨 Sicherheit, Sanitär & Brandschutz</div>
     <div class="panel-body" style="padding:0">
-      <table class="tbl">
+      <table class="tbl" id="reitSicherheitTbl">
         <thead><tr><th>Pos.</th><th>Beschreibung</th><th>Menge</th><th>Verantwortlich</th><th>Termin</th><th>Status</th></tr></thead>
         <tbody>
           <tr><td>S1</td><td><strong>Behördliche Genehmigung Großveranstaltung</strong> – Versammlungsstättenverordnung BW (ab 200 Pers.)</td><td>1 Antrag</td><td>Bürgermeister / Orga</td><td>bis 30. Sep 2026</td><td><span class="pill pill-red">⚠ Pflicht!</span></td></tr>
@@ -2579,7 +2579,7 @@ tr[draggable="true"]{cursor:default}
   <div class="panel" style="margin-top:20px">
     <div class="panel-head">🎨 Dekoration & Atmosphäre</div>
     <div class="panel-body" style="padding:0">
-      <table class="tbl">
+      <table class="tbl" id="reitDekoTbl">
         <thead><tr><th>Pos.</th><th>Beschreibung</th><th>Menge</th><th>Beschaffung</th><th>Aufbautag</th><th>Status</th><th>Kosten</th></tr></thead>
         <tbody>
           <tr><td>D1</td><td><strong>Binkerzunft-Banner (groß)</strong> – 4× Rollbanner 2 m × 0,85 m mit Logo/Narrenruf</td><td>4 Stk</td><td>Druckhaus Boll</td><td>Fr 5. Feb</td><td><span class="pill pill-green">Bestätigt</span></td><td>320 €</td></tr>
@@ -2686,7 +2686,7 @@ tr[draggable="true"]{cursor:default}
     <div class="panel-body" style="padding:14px">
       <div class="grid2">
         <div>
-          <table class="tbl" style="font-size:.8rem">
+          <table class="tbl" id="reitBudgetTbl" style="font-size:.8rem">
             <thead><tr><th>Bereich</th><th style="text-align:right">Kosten</th><th>Status</th></tr></thead>
             <tbody>
               <tr><td>🎤 Bühne (Podest, Backdrop)</td><td style="text-align:right">3.300 €</td><td><span class="pill pill-green" style="font-size:.65rem">Bestätigt</span></td></tr>
@@ -2823,7 +2823,7 @@ tr[draggable="true"]{cursor:default}
   <div class="panel" style="margin-top:20px">
     <div class="panel-head">📋 Programm-Ablauf Zunftmeisterempfang</div>
     <div class="panel-body" style="padding:14px">
-      <table class="tbl">
+      <table class="tbl" id="zmProgrammTbl">
         <thead><tr><th>Zeit</th><th>Programmpunkt</th><th>Verantwortlich</th><th>Dauer</th><th>Hinweis</th></tr></thead>
         <tbody>
           <tr><td><strong>17:00</strong></td><td>Helfer auf Position, letzte Checks Technik + Büffet</td><td>Orga-Team</td><td>30 min</td><td>Beamer-Test, Mikrofon-Test</td></tr>
@@ -2846,7 +2846,7 @@ tr[draggable="true"]{cursor:default}
   <div class="panel" style="margin-top:20px">
     <div class="panel-head">🪑 Saal-Aufbau & Möblierung</div>
     <div class="panel-body" style="padding:0">
-      <table class="tbl">
+      <table class="tbl" id="zmSaalTbl">
         <thead><tr><th>Pos.</th><th>Beschreibung</th><th>Menge</th><th>Beschaffung</th><th>Aufbautag</th><th>Status</th><th>Kosten</th></tr></thead>
         <tbody>
           <tr><td>S1</td><td><strong>Bankett-Tische</strong> – 180 cm × 80 cm, Konferenztisch (reihenweise, nach Landschaft)</td><td>22 Tische</td><td>Gemeindehalle vorhanden</td><td>Fr 5. Feb 14:00</td><td><span class="pill pill-green">Vorhanden</span></td><td>—</td></tr>
@@ -2868,7 +2868,7 @@ tr[draggable="true"]{cursor:default}
   <div class="panel" style="margin-top:20px">
     <div class="panel-head">🍽 Bewirtung, Büffet & Getränke</div>
     <div class="panel-body" style="padding:0">
-      <table class="tbl">
+      <table class="tbl" id="zmGetraenkeTbl">
         <thead><tr><th>Pos.</th><th>Beschreibung</th><th>Menge (für ~180 P.)</th><th>Lieferant</th><th>Anlieferung</th><th>Status</th><th>Kosten</th></tr></thead>
         <tbody>
           <tr style="background:#fff5ee"><td colspan="7" style="font-weight:700;color:#e65100;padding:8px 12px">🥂 Sektempfang / Begrüßungsgetränk (17:30 Uhr)</td></tr>
@@ -2898,7 +2898,7 @@ tr[draggable="true"]{cursor:default}
   <div class="panel" style="margin-top:20px">
     <div class="panel-head">🔊 Technik: Mikrofon, Beamer & Beleuchtung</div>
     <div class="panel-body" style="padding:0">
-      <table class="tbl">
+      <table class="tbl" id="zmTechnikTbl">
         <thead><tr><th>Pos.</th><th>Beschreibung</th><th>Menge</th><th>Lieferant</th><th>Aufbautag</th><th>Status</th><th>Kosten</th></tr></thead>
         <tbody>
           <tr><td>T1</td><td><strong>PA-Anlage Saal</strong> – 2× aktive Fullrange-Box auf Stativ, Lautstärke für Reden + Hintergrundmusik</td><td>2 Stk</td><td>Gemeindehalle eigene Anlage prüfen</td><td>Fr 5. Feb 15:00</td><td><span class="pill pill-gold">Prüfen!</span></td><td>—</td></tr>
@@ -2919,7 +2919,7 @@ tr[draggable="true"]{cursor:default}
   <div class="panel" style="margin-top:20px">
     <div class="panel-head">🎨 Dekoration & Repräsentation</div>
     <div class="panel-body" style="padding:0">
-      <table class="tbl">
+      <table class="tbl" id="zmDekoTbl">
         <thead><tr><th>Pos.</th><th>Beschreibung</th><th>Menge</th><th>Beschaffung</th><th>Aufbautag</th><th>Status</th><th>Kosten</th></tr></thead>
         <tbody>
           <tr><td>D1</td><td><strong>Blumenschmuck Ehrengäste-Tisch</strong> – festliche Gestecke, gold/weiß/schwarz</td><td>3 Gestecke</td><td>Blumenladen Boll</td><td>Fr 5. Feb 16:30</td><td><span class="pill pill-gold">Ausstehend</span></td><td>~120 €</td></tr>
@@ -3005,7 +3005,7 @@ tr[draggable="true"]{cursor:default}
   <div class="panel" style="margin-top:20px">
     <div class="panel-head">🙋 Helfer-Einsatzplan Zunftmeisterempfang</div>
     <div class="panel-body" style="padding:0">
-      <table class="tbl">
+      <table class="tbl" id="zmHelferTbl">
         <thead><tr><th>Funktion</th><th>Aufgabe</th><th>Zeit</th><th>Anz.</th><th>Name(n)</th><th>Status</th></tr></thead>
         <tbody>
           <tr><td><strong>🚪 Einlass / Empfang</strong></td><td>Gästeliste prüfen, Einladungskarten kontrollieren, Begrüßung</td><td>17:15–18:30</td><td>2</td><td>Andrea Schmitt, N.N.</td><td><span class="pill pill-gold">1 fehlt</span></td></tr>
@@ -3027,7 +3027,7 @@ tr[draggable="true"]{cursor:default}
     <div class="panel-body" style="padding:14px">
       <div class="grid2">
         <div>
-          <table class="tbl" style="font-size:.8rem">
+          <table class="tbl" id="zmBudgetTbl" style="font-size:.8rem">
             <thead><tr><th>Bereich</th><th style="text-align:right">Kosten</th><th>Status</th></tr></thead>
             <tbody>
               <tr><td>🍽 Cateringservice Büffet</td><td style="text-align:right">1.800 €</td><td><span class="pill pill-red" style="font-size:.65rem">Anfragen!</span></td></tr>
@@ -3109,6 +3109,8 @@ function show(id, btn) {
   if (id === 'helfer'     && !window._nt27helfer)     { window._nt27helfer     = true; nt27InitHelfer(); }
   if (id === 'logistik'  && !window._nt27logistik)   { window._nt27logistik   = true; nt27InitLogistik(); }
   if (id === 'staende'   && !window._nt27staende)    { window._nt27staende    = true; nt27InitStaende(); }
+  if (id === 'reithalle' && !window._nt27reithalle)  { window._nt27reithalle  = true; nt27InitReithalle(); }
+  if (id === 'zmempfang' && !window._nt27zmempfang)  { window._nt27zmempfang  = true; nt27InitZmempfang(); }
 }
 
 // ── Chart: Anmeldungsverlauf ─────────────────────────────────────────────────
@@ -4427,6 +4429,166 @@ function nt27InitStaende(){
     txtDiv.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();this.blur();}});
     txtDiv.addEventListener('blur',function(){ localStorage.setItem(key,txtDiv.innerHTML); nt27Flash(); });
   });
+}
+
+function nt27InitReithalle(){
+  var sec=document.getElementById('reithalle');
+  if(!sec) return;
+
+  // 1. Section-Title Span
+  var span=sec.querySelector('.section-title span');
+  if(span){
+    var sv=localStorage.getItem('nt27_reit_span'); if(sv!==null) span.textContent=sv;
+    span.contentEditable='true'; span.title='Klicken zum Bearbeiten';
+    span.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();this.blur();}});
+    span.addEventListener('blur',function(){ localStorage.setItem('nt27_reit_span',span.textContent); nt27Flash(); });
+  }
+
+  // 2. Alert-gold
+  var alertGold=sec.querySelector('.alert-gold');
+  if(alertGold){
+    var sva=localStorage.getItem('nt27_reit_alert'); if(sva!==null) alertGold.innerHTML=sva;
+    alertGold.contentEditable='true';
+    alertGold.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();this.blur();}});
+    alertGold.addEventListener('blur',function(){ localStorage.setItem('nt27_reit_alert',alertGold.innerHTML); nt27Flash(); });
+  }
+
+  // 3. Card-vals + Card-subs
+  sec.querySelectorAll('.card-val').forEach(function(el,i){
+    var key='nt27_reit_cv_'+i;
+    var sv=localStorage.getItem(key); if(sv!==null) el.textContent=sv;
+    el.contentEditable='true';
+    el.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();this.blur();}});
+    el.addEventListener('blur',function(){ localStorage.setItem(key,el.textContent); nt27Flash(); });
+  });
+  sec.querySelectorAll('.card-sub').forEach(function(el,i){
+    var key='nt27_reit_cs_'+i;
+    var sv=localStorage.getItem(key); if(sv!==null) el.textContent=sv;
+    el.contentEditable='true';
+    el.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();this.blur();}});
+    el.addEventListener('blur',function(){ localStorage.setItem(key,el.textContent); nt27Flash(); });
+  });
+
+  // 4. Aufbau-Tabellen
+  nt27InitTable('reitBuehneTbl','reit_buehne',{});
+  nt27InitTable('reitPaTbl','reit_pa',{});
+  nt27InitTable('reitLichtTbl','reit_licht',{});
+  nt27InitTable('reitBarTbl','reit_bar',{});
+  nt27InitTable('reitMobiliarTbl','reit_mobiliar',{});
+  nt27InitTable('reitStromTbl','reit_strom',{});
+  nt27InitTable('reitSicherheitTbl','reit_sicherheit',{});
+  nt27InitTable('reitDekoTbl','reit_deko',{});
+  nt27InitTable('reitBudgetTbl','reit_budget',{});
+
+  // 5. Aufbau-Zeitplan: 5 Tag-Karten (div[style*="line-height:2"])
+  var dayCards=sec.querySelectorAll('[style*="Aufbau-Zeitplan"] ~ * div[style*="line-height:2"]');
+  // Fallback: alle inline-content divs inside the grid inside Aufbau-Zeitplan panel
+  var zeitplanPanel=null;
+  sec.querySelectorAll('.panel').forEach(function(p){
+    if(p.querySelector('.panel-head')&&p.querySelector('.panel-head').textContent.includes('Aufbau-Zeitplan')) zeitplanPanel=p;
+  });
+  if(zeitplanPanel){
+    zeitplanPanel.querySelectorAll('[style*="line-height:2"]').forEach(function(el,i){
+      var key='nt27_reit_day_'+i;
+      var sv=localStorage.getItem(key); if(sv!==null) el.innerHTML=sv;
+      el.contentEditable='true';
+      el.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();this.blur();}});
+      el.addEventListener('blur',function(){ localStorage.setItem(key,el.innerHTML); nt27Flash(); });
+    });
+  }
+
+  // 6. Offene Punkte (rechte Spalte im Budget-Panel)
+  var budgetPanel=null;
+  sec.querySelectorAll('.panel').forEach(function(p){
+    if(p.querySelector('.panel-head')&&p.querySelector('.panel-head').textContent.includes('Budget-Übersicht Reithalle')) budgetPanel=p;
+  });
+  if(budgetPanel){
+    var offeneDiv=budgetPanel.querySelector('.grid2 > div:last-child > div[style*="background:#fff9e0"]');
+    if(offeneDiv){
+      var svo=localStorage.getItem('nt27_reit_offene'); if(svo!==null) offeneDiv.innerHTML=svo;
+      offeneDiv.contentEditable='true';
+      offeneDiv.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();this.blur();}});
+      offeneDiv.addEventListener('blur',function(){ localStorage.setItem('nt27_reit_offene',offeneDiv.innerHTML); nt27Flash(); });
+    }
+  }
+}
+
+function nt27InitZmempfang(){
+  var sec=document.getElementById('zmempfang');
+  if(!sec) return;
+
+  // 1. Section-Title Span
+  var span=sec.querySelector('.section-title span');
+  if(span){
+    var sv=localStorage.getItem('nt27_zm_span'); if(sv!==null) span.textContent=sv;
+    span.contentEditable='true'; span.title='Klicken zum Bearbeiten';
+    span.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();this.blur();}});
+    span.addEventListener('blur',function(){ localStorage.setItem('nt27_zm_span',span.textContent); nt27Flash(); });
+  }
+
+  // 2. Alert-gold
+  var alertGold=sec.querySelector('.alert-gold');
+  if(alertGold){
+    var sva=localStorage.getItem('nt27_zm_alert'); if(sva!==null) alertGold.innerHTML=sva;
+    alertGold.contentEditable='true';
+    alertGold.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();this.blur();}});
+    alertGold.addEventListener('blur',function(){ localStorage.setItem('nt27_zm_alert',alertGold.innerHTML); nt27Flash(); });
+  }
+
+  // 3. Card-vals + Card-subs
+  sec.querySelectorAll('.card-val').forEach(function(el,i){
+    var key='nt27_zm_cv_'+i;
+    var sv=localStorage.getItem(key); if(sv!==null) el.textContent=sv;
+    el.contentEditable='true';
+    el.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();this.blur();}});
+    el.addEventListener('blur',function(){ localStorage.setItem(key,el.textContent); nt27Flash(); });
+  });
+  sec.querySelectorAll('.card-sub').forEach(function(el,i){
+    var key='nt27_zm_cs_'+i;
+    var sv=localStorage.getItem(key); if(sv!==null) el.textContent=sv;
+    el.contentEditable='true';
+    el.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();this.blur();}});
+    el.addEventListener('blur',function(){ localStorage.setItem(key,el.textContent); nt27Flash(); });
+  });
+
+  // 4. Tabellen
+  nt27InitTable('zmProgrammTbl','zm_programm',{});
+  nt27InitTable('zmSaalTbl','zm_saal',{});
+  nt27InitTable('zmGetraenkeTbl','zm_getraenke',{});
+  nt27InitTable('zmTechnikTbl','zm_technik',{});
+  nt27InitTable('zmDekoTbl','zm_deko',{});
+  nt27InitTable('zmHelferTbl','zm_helfer',{});
+  nt27InitTable('zmBudgetTbl','zm_budget',{});
+
+  // 5. Aufbau-Zeitplan: 4 Tag-Karten
+  var zeitplanPanel=null;
+  sec.querySelectorAll('.panel').forEach(function(p){
+    if(p.querySelector('.panel-head')&&p.querySelector('.panel-head').textContent.includes('Aufbau-Zeitplan')) zeitplanPanel=p;
+  });
+  if(zeitplanPanel){
+    zeitplanPanel.querySelectorAll('[style*="line-height:2.1"]').forEach(function(el,i){
+      var key='nt27_zm_day_'+i;
+      var sv=localStorage.getItem(key); if(sv!==null) el.innerHTML=sv;
+      el.contentEditable='true';
+      el.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();this.blur();}});
+      el.addEventListener('blur',function(){ localStorage.setItem(key,el.innerHTML); nt27Flash(); });
+    });
+  }
+
+  // 6. To-Do / Offene Punkte (Budget-Panel rechte Spalte)
+  var budgetPanel=null;
+  sec.querySelectorAll('.panel').forEach(function(p){
+    if(p.querySelector('.panel-head')&&p.querySelector('.panel-head').textContent.includes('Budget-Übersicht Zunftmeisterempfang')) budgetPanel=p;
+  });
+  if(budgetPanel){
+    var offeneDiv=budgetPanel.querySelector('.grid2 > div:last-child > div[style*="background:#fff9e0"]');
+    if(offeneDiv){
+      var svo=localStorage.getItem('nt27_zm_offene'); if(svo!==null) offeneDiv.innerHTML=svo;
+      offeneDiv.contentEditable='true';
+      offeneDiv.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();this.blur();}});
+      offeneDiv.addEventListener('blur',function(){ localStorage.setItem('nt27_zm_offene',offeneDiv.innerHTML); nt27Flash(); });
+    }
+  }
 }
 
 function staeAnmelden(btn){
