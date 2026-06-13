@@ -1050,37 +1050,49 @@ tr[draggable="true"]{cursor:default}
     <div class="card"><div class="card-val">8.200 €</div><div class="card-label">Ist-Ausgaben</div></div>
   </div>
 
+  <div class="alert" style="background:#fff8e1;border-color:#f9a825;color:#555;margin-bottom:16px">💡 <strong>Hinweis:</strong> Alle Planwerte sind Beispieldaten für das Mockup — bitte mit echten Zahlen ersetzen. Die Ist-Spalte für gebuchte Beträge ist neu und startet bei 0.</div>
+
   <div class="grid2">
     <div class="panel">
       <div class="panel-head">📥 Einnahmen</div>
-      <div class="panel-body">
-        <div class="fin-row"><span class="fin-cat">Ticketverkauf Brauchtumsabend</span><span class="fin-amt-pos">32.000 €</span></div>
-        <div class="fin-row"><span class="fin-cat">Tombola / Losverkauf</span><span class="fin-amt-pos">6.000 €</span></div>
-        <div class="fin-row"><span class="fin-cat">Zunft-Teilnahmebeitrag (28 × 80 €)</span><span class="fin-amt-pos">2.240 €</span></div>
-        <div class="fin-row"><span class="fin-cat">Außenbewirtung / Festplatz</span><span class="fin-amt-pos">8.500 €</span></div>
-        <div class="fin-row"><span class="fin-cat">Getränke / Bar Festzelt</span><span class="fin-amt-pos">9.200 €</span></div>
-        <div class="fin-row"><span class="fin-cat">Sponsoren / Inserate Programmheft</span><span class="fin-amt-pos">3.500 €</span></div>
-        <div class="fin-row"><span class="fin-cat">Gemeinde-Zuschuss</span><span class="fin-amt-pos">1.060 €</span></div>
-        <div style="margin-top:12px;padding-top:12px;border-top:2px solid #eee;display:flex;justify-content:space-between;font-weight:800"><span>Summe Einnahmen</span><span style="color:var(--green)">62.500 €</span></div>
+      <div class="panel-body" style="padding:0">
+        <table class="tbl" id="finEinnTbl" style="width:100%">
+          <thead><tr><th>Position</th><th style="text-align:right;white-space:nowrap">Plan €</th><th style="text-align:right;white-space:nowrap">Ist €</th></tr></thead>
+          <tbody>
+            <tr><td>Ticketverkauf Brauchtumsabend</td><td style="text-align:right;color:var(--green)">32.000</td><td style="text-align:right;color:#aaa">0</td></tr>
+            <tr><td>Tombola / Losverkauf</td><td style="text-align:right;color:var(--green)">6.000</td><td style="text-align:right;color:#aaa">0</td></tr>
+            <tr><td>Zunft-Teilnahmebeitrag (28 × 80 €)</td><td style="text-align:right;color:var(--green)">2.240</td><td style="text-align:right;color:#aaa">0</td></tr>
+            <tr><td>Außenbewirtung / Festplatz</td><td style="text-align:right;color:var(--green)">8.500</td><td style="text-align:right;color:#aaa">0</td></tr>
+            <tr><td>Getränke / Bar Festzelt</td><td style="text-align:right;color:var(--green)">9.200</td><td style="text-align:right;color:#aaa">0</td></tr>
+            <tr><td>Sponsoren / Inserate Programmheft</td><td style="text-align:right;color:var(--green)">3.500</td><td style="text-align:right;color:#aaa">0</td></tr>
+            <tr><td>Gemeinde-Zuschuss</td><td style="text-align:right;color:var(--green)">1.060</td><td style="text-align:right;color:#aaa">0</td></tr>
+          </tbody>
+          <tfoot><tr style="font-weight:800;background:#f0fff4"><td style="padding:8px 12px">Summe Einnahmen</td><td id="finEinnSumPlan" style="padding:8px 12px;text-align:right;color:var(--green)">62.500</td><td id="finEinnSumIst" style="padding:8px 12px;text-align:right;color:#999">0</td></tr></tfoot>
+        </table>
       </div>
     </div>
     <div class="panel">
       <div class="panel-head">📤 Ausgaben</div>
-      <div class="panel-body">
-        <div class="fin-row"><span class="fin-cat">Reithalle Boll (Miete + Nebenkosten)</span><span class="fin-amt-neg">3.500 €</span></div>
-        <div class="fin-row"><span class="fin-cat">Festzelt 1.500 P. (Miete + Auf-/Abbau)</span><span class="fin-amt-neg">14.800 €</span></div>
-        <div class="fin-row"><span class="fin-cat">Musikkapellen / Bands (4 Gruppen)</span><span class="fin-amt-neg">6.200 €</span></div>
-        <div class="fin-row"><span class="fin-cat">PA-Technik / Licht / Strom</span><span class="fin-amt-neg">4.800 €</span></div>
-        <div class="fin-row"><span class="fin-cat">Catering / Getränkeeinkauf</span><span class="fin-amt-neg">12.400 €</span></div>
-        <div class="fin-row"><span class="fin-cat">Sicherheit / Ordnerdienst</span><span class="fin-amt-neg">3.200 €</span></div>
-        <div class="fin-row"><span class="fin-cat">Druckkosten (Programm, Plakate, Lose)</span><span class="fin-amt-neg">2.100 €</span></div>
-        <div class="fin-row"><span class="fin-cat">Tombola-Preise (Einkauf)</span><span class="fin-amt-neg">3.800 €</span></div>
-        <div class="fin-row"><span class="fin-cat">Gemeindehalle Boll (Miete Fr + Sa)</span><span class="fin-amt-neg">400 €</span></div>
-        <div class="fin-row"><span class="fin-cat">Zunftmeisterempfang (Bewirtung, Gemeindehalle Fr)</span><span class="fin-amt-neg">1.800 €</span></div>
-        <div class="fin-row"><span class="fin-cat">Versicherung / Genehmigungen</span><span class="fin-amt-neg">900 €</span></div>
-        <div class="fin-row"><span class="fin-cat">Dekoration / Ausstattung</span><span class="fin-amt-neg">2.400 €</span></div>
-        <div class="fin-row"><span class="fin-cat">Sonstiges / Reserve (5%)</span><span class="fin-amt-neg">2.100 €</span></div>
-        <div style="margin-top:12px;padding-top:12px;border-top:2px solid #eee;display:flex;justify-content:space-between;font-weight:800"><span>Summe Ausgaben</span><span style="color:var(--red)">58.200 €</span></div>
+      <div class="panel-body" style="padding:0">
+        <table class="tbl" id="finAusgTbl" style="width:100%">
+          <thead><tr><th>Position</th><th style="text-align:right;white-space:nowrap">Plan €</th><th style="text-align:right;white-space:nowrap">Ist €</th></tr></thead>
+          <tbody>
+            <tr><td>Reithalle Boll (Miete + Nebenkosten)</td><td style="text-align:right;color:var(--red)">3.500</td><td style="text-align:right;color:#aaa">0</td></tr>
+            <tr><td>Festzelt 1.500 P. (Miete + Auf-/Abbau)</td><td style="text-align:right;color:var(--red)">14.800</td><td style="text-align:right;color:#aaa">0</td></tr>
+            <tr><td>Musikkapellen / Bands (4 Gruppen)</td><td style="text-align:right;color:var(--red)">6.200</td><td style="text-align:right;color:#aaa">0</td></tr>
+            <tr><td>PA-Technik / Licht / Strom</td><td style="text-align:right;color:var(--red)">4.800</td><td style="text-align:right;color:#aaa">0</td></tr>
+            <tr><td>Catering / Getränkeeinkauf</td><td style="text-align:right;color:var(--red)">12.400</td><td style="text-align:right;color:#aaa">0</td></tr>
+            <tr><td>Sicherheit / Ordnerdienst</td><td style="text-align:right;color:var(--red)">3.200</td><td style="text-align:right;color:#aaa">0</td></tr>
+            <tr><td>Druckkosten (Programm, Plakate, Lose)</td><td style="text-align:right;color:var(--red)">2.100</td><td style="text-align:right;color:#aaa">0</td></tr>
+            <tr><td>Tombola-Preise (Einkauf)</td><td style="text-align:right;color:var(--red)">3.800</td><td style="text-align:right;color:#aaa">0</td></tr>
+            <tr><td>Gemeindehalle Boll (Miete Fr + Sa)</td><td style="text-align:right;color:var(--red)">400</td><td style="text-align:right;color:#aaa">0</td></tr>
+            <tr><td>Zunftmeisterempfang (Bewirtung)</td><td style="text-align:right;color:var(--red)">1.800</td><td style="text-align:right;color:#aaa">0</td></tr>
+            <tr><td>Versicherung / Genehmigungen</td><td style="text-align:right;color:var(--red)">900</td><td style="text-align:right;color:#aaa">0</td></tr>
+            <tr><td>Dekoration / Ausstattung</td><td style="text-align:right;color:var(--red)">2.400</td><td style="text-align:right;color:#aaa">0</td></tr>
+            <tr><td>Sonstiges / Reserve (5%)</td><td style="text-align:right;color:var(--red)">2.100</td><td style="text-align:right;color:#aaa">0</td></tr>
+          </tbody>
+          <tfoot><tr style="font-weight:800;background:#fff8f8"><td style="padding:8px 12px">Summe Ausgaben</td><td id="finAusgSumPlan" style="padding:8px 12px;text-align:right;color:var(--red)">58.200</td><td id="finAusgSumIst" style="padding:8px 12px;text-align:right;color:#999">0</td></tr></tfoot>
+        </table>
       </div>
     </div>
   </div>
@@ -4086,60 +4098,23 @@ function nt27SaveTable(tbody, saveKey){
 
 // ── Finanzen: Inline-Edit + Zeilen hinzufügen ───────────────────
 function nt27InitFinanzen(){
-  var fin=document.getElementById('finanzen');
-  if(!fin) return;
-  var saved=localStorage.getItem('nt27_fin');
-  if(saved){ var g=fin.querySelector('.grid2'); if(g) g.innerHTML=saved; }
-
-  fin.querySelectorAll('.fin-cat,.fin-amt-pos,.fin-amt-neg').forEach(function(el){
+  if(document.getElementById('finEinnTbl')&&!window._nt27finEinn){
+    window._nt27finEinn=true;
+    nt27InitTable('finEinnTbl','fin_einn',{});
+  }
+  if(document.getElementById('finAusgTbl')&&!window._nt27finAusg){
+    window._nt27finAusg=true;
+    nt27InitTable('finAusgTbl','fin_ausg',{});
+  }
+  // Summe-Zeilen manuell editierbar machen
+  ['finEinnSumPlan','finEinnSumIst','finAusgSumPlan','finAusgSumIst'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(!el||el.contentEditable==='true') return;
     el.contentEditable='true';
-    el.style.cursor='text';
-    el.addEventListener('blur',function(){ nt27SaveFinanzen(fin); });
-    el.addEventListener('keydown',function(e){ if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();this.blur();} });
+    el.title='Klicken zum Bearbeiten';
+    el.addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); this.blur(); } });
+    el.addEventListener('blur',function(){ nt27Flash(); });
   });
-
-  // Add "Neue Zeile" & "Zeile löschen" to existing fin-rows
-  fin.querySelectorAll('.fin-row').forEach(function(row){
-    if(row.querySelector('.nt27-del-btn')) return;
-    var btn=document.createElement('button');
-    btn.className='nt27-del-btn'; btn.innerHTML='✕'; btn.title='Zeile löschen';
-    btn.onclick=function(){ if(confirm('Zeile löschen?')){row.remove();nt27SaveFinanzen(fin);} };
-    row.appendChild(btn);
-  });
-
-  // Add "Neue Zeile" buttons to each panel
-  fin.querySelectorAll('.panel').forEach(function(panel,i){
-    var body=panel.querySelector('.panel-body');
-    if(!body||panel.querySelector('.nt27-add-btn')) return;
-    var isPos=i===0;
-    var btn=document.createElement('button');
-    btn.className='btn btn-outline nt27-add-btn';
-    btn.innerHTML='➕ Neue Budgetzeile';
-    btn.onclick=function(){nt27AddFinRow(body,isPos,fin);};
-    body.appendChild(btn);
-  });
-}
-
-function nt27AddFinRow(body, isPos, fin){
-  var row=document.createElement('div'); row.className='fin-row';
-  var cat=document.createElement('span'); cat.className='fin-cat'; cat.contentEditable='true'; cat.style.cursor='text'; cat.innerHTML='Neue Position…';
-  var amt=document.createElement('span'); amt.className=isPos?'fin-amt-pos':'fin-amt-neg'; amt.contentEditable='true'; amt.style.cursor='text'; amt.innerHTML='0 €';
-  var del=document.createElement('button'); del.className='nt27-del-btn'; del.innerHTML='✕'; del.title='Löschen';
-  del.onclick=function(){ if(confirm('Zeile löschen?')){row.remove();nt27SaveFinanzen(fin);} };
-  [cat,amt].forEach(function(el){
-    el.addEventListener('blur',function(){nt27SaveFinanzen(fin);});
-    el.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();this.blur();}});
-  });
-  row.appendChild(cat); row.appendChild(amt); row.appendChild(del);
-  var summe=body.querySelector('[style*="border-top"]');
-  summe ? body.insertBefore(row,summe) : body.appendChild(row);
-  cat.focus(); cat.innerHTML='';
-}
-
-function nt27SaveFinanzen(fin){
-  var g=(fin||document.getElementById('finanzen')).querySelector('.grid2');
-  if(g) localStorage.setItem('nt27_fin',g.innerHTML);
-  nt27Flash();
 }
 
 // ── Programm: Inline-Edit + Drag & Drop ─────────────────────────
