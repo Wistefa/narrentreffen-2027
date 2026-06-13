@@ -4940,10 +4940,13 @@ function spMakeSelectCell(td, options){
   sel.style.cssText='width:100%;border:none;background:transparent;font-size:.78rem;font-family:inherit;cursor:pointer;padding:2px 0;color:inherit';
   options.forEach(function(opt){
     var o=document.createElement('option'); o.value=opt; o.textContent=opt;
-    if(opt===cur) o.selected=true;
+    if(opt===cur){ o.selected=true; o.setAttribute('selected',''); }
     sel.appendChild(o);
   });
   sel.addEventListener('change',function(){
+    // Sync selected-Attribut (HTML-Serialisierung liest Attribut, nicht DOM-Property)
+    Array.from(sel.options).forEach(function(o){ o.removeAttribute('selected'); });
+    if(sel.selectedIndex>=0) sel.options[sel.selectedIndex].setAttribute('selected','');
     var tb=td.closest('tbody'); if(tb) nt27SaveTable(tb,'sp_liste');
   });
   td.appendChild(sel);
