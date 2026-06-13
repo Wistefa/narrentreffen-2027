@@ -4242,7 +4242,7 @@ function nt27RenderZunftPool() {
   var badge  = document.getElementById('pool-badge');
   if (!body) return;
 
-  // Alle angemeldeten Zünfte aus der Zunftanmeldungs-Tabelle lesen
+  // Nur bestätigte Zünfte aus der Zunftanmeldungs-Tabelle lesen
   var all = [];
   document.querySelectorAll('#zunftTabelle tbody tr').forEach(function(row) {
     if (row.querySelector('td[colspan]')) return;
@@ -4250,18 +4250,22 @@ function nt27RenderZunftPool() {
     if (!nameEl) return;
     var name = nameEl.textContent.trim();
     if (!name || name === '…') return;
+    // Status lesen: erst vom Select, dann data-st
+    var stSel = row.querySelector('select');
+    var status = stSel ? stSel.value : (row.dataset.st || '');
+    if (status !== 'Bestätigt' && status !== 'Gastgeber') return;
     var hasHandle = !!row.querySelector('.nt27-handle');
     var ortCell = row.cells[hasHandle ? 3 : 2];
     var tnCell  = row.cells[hasHandle ? 8 : 7];
     all.push({
       name: name,
-      ort:  (ortCell  ? ortCell.textContent  : '').replace(/[✕⠿]/g,'').trim(),
-      tn:   (tnCell   ? tnCell.textContent   : '').replace(/[✕⠿]/g,'').trim()
+      ort:  (ortCell ? ortCell.textContent : '').replace(/[✕⠿]/g,'').trim(),
+      tn:   (tnCell  ? tnCell.textContent  : '').replace(/[✕⠿]/g,'').trim()
     });
   });
 
   if (all.length === 0) {
-    body.innerHTML = '<div style="padding:14px;color:#aaa;font-size:.83rem">ℹ Zuerst den Tab „Zunftanmeldung" einmal öffnen, dann hier aktualisieren.</div>';
+    body.innerHTML = '<div style="padding:14px;color:#aaa;font-size:.83rem">ℹ Zuerst den Tab „Zunftanmeldung" öffnen. Nur bestätigte Zünfte erscheinen hier.</div>';
     if (badge) badge.textContent = '—';
     return;
   }
@@ -4271,30 +4275,27 @@ function nt27RenderZunftPool() {
 
   // Filtern: nur die die NICHT im Aufstellungsplan sind
   var pool = all.filter(function(z) {
-    var kw = nt27keyWord(z.name);
-    return !planned.has(kw);
+    return !planned.has(nt27keyWord(z.name));
   });
 
   if (badge) badge.textContent = pool.length === 0 ? '✅ alle eingeplant' : pool.length + ' noch offen';
 
   if (pool.length === 0) {
-    body.innerHTML = '<div style="padding:14px;color:#4caf50;font-size:.85rem">✅ Alle angemeldeten Zünfte sind im Aufstellungsplan.</div>';
+    body.innerHTML = '<div style="padding:14px;color:#4caf50;font-size:.85rem">✅ Alle bestätigten Zünfte sind im Aufstellungsplan.</div>';
     return;
   }
 
-  var html = '<div style="padding:8px 12px"><table class="tbl" style="font-size:.82rem">' +
-    '<thead><tr><th>Zunft / Gruppe</th><th>Ort</th><th>TN</th><th style="width:130px"></th></tr></thead><tbody>';
-  pool.forEach(function(z) {
-    html += '<tr>' +
-      '<td><strong>'+nt27Escape(z.name)+'</strong></td>' +
-      '<td>'+nt27Escape(z.ort)+'</td>' +
-      '<td>'+nt27Escape(z.tn)+'</td>' +
-      '<td><button class="btn btn-sm btn-primary" style="font-size:.74rem;padding:3px 10px" ' +
+  var html = '<div style="padding:4px 0">';
+  pool.forEach(function(z, i) {
+    html += '<div style="display:flex;align-items:center;justify-content:space-between;padding:7px 14px;' +
+      (i % 2 === 0 ? 'background:#fafafa' : 'background:#fff') + ';border-bottom:1px solid #eee">' +
+      '<span style="font-size:.85rem"><strong>'+nt27Escape(z.name)+'</strong></span>' +
+      '<button class="btn btn-sm btn-primary" style="font-size:.75rem;padding:3px 12px;white-space:nowrap" ' +
         'data-zname="'+nt27Escape(z.name)+'" data-zort="'+nt27Escape(z.ort)+'" data-ztn="'+nt27Escape(z.tn)+'" ' +
-        'onclick="nt27AddToUmzug(this.dataset.zname,this.dataset.zort,this.dataset.ztn)">➕ Einplanen</button></td>' +
-      '</tr>';
+        'onclick="nt27AddToUmzug(this.dataset.zname,this.dataset.zort,this.dataset.ztn)">➕ Einplanen</button>' +
+      '</div>';
   });
-  html += '</tbody></table></div>';
+  html += '</div>';
   body.innerHTML = html;
 }
 
@@ -4328,11 +4329,10 @@ function nt27AddToUmzug(name, ort, tn) {
     nt27Flash();
   }
 
-  // Neue Zeile kurz gelblich hervorheben + scrollen
+  // Neue Zeile kurz gelblich hervorheben (kein Scrollen)
   tr.style.transition = 'background .6s';
   tr.style.background = '#fffde7';
   setTimeout(function(){ tr.style.background = ''; }, 2500);
-  tr.scrollIntoView({ behavior:'smooth', block:'center' });
 
   // Badge Aufstellungsplan aktualisieren
   var apBadge = document.querySelector('#aufstellungsplan .panel-head .badge');
