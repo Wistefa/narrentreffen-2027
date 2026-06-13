@@ -186,6 +186,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 /* ── HONEYCOMB BG ── */
 body::before{content:'🐝';position:fixed;top:12px;right:20px;font-size:2.5rem;opacity:.06;pointer-events:none;z-index:0}
+
+/* ── NT27 EDIT SYSTEM ── */
+.nt27-toolbar{display:flex;gap:8px;padding:5px 16px;background:#1c1c1c;align-items:center;font-size:.75rem;flex-wrap:wrap;border-top:1px solid #333}
+.nt27-toolbar>span:first-child{color:#666;letter-spacing:.03em}
+.nt27-toolbar button{background:none;border:1px solid #3a3a3a;color:#888;padding:3px 10px;border-radius:4px;cursor:pointer;font-size:.72rem;transition:all .15s}
+.nt27-toolbar button:hover{border-color:#f5c518;color:#f5c518}
+.nt27-toolbar .nt27-reset-btn:hover{border-color:#c62828!important;color:#c62828!important}
+#nt27-saved{color:#4caf50;font-weight:700;opacity:0;transition:opacity .3s,transform .25s;font-size:.74rem;margin-left:4px}
+[contenteditable]:not([contenteditable="false"]):not(input):not(select):not(textarea):not(.nav-btn):not(.btn):not(.panel-head):not(.sched-title[data-noedit]):focus{background:#fffde7!important;outline:1px solid #f9a825!important;border-radius:2px}
+.nt27-handle{cursor:grab!important;color:#ccc;user-select:none;padding:0 5px!important;width:18px!important;text-align:center;font-size:.95rem}
+.nt27-handle:active{cursor:grabbing!important}
+.nt27-row-dragging{opacity:.35!important}
+.nt27-drag-over td{background:#fffde7!important;outline:2px solid #f5c518}
+tr[draggable="true"]{cursor:default}
+.nt27-add-btn{font-size:.76rem!important;margin-top:8px;width:100%;padding:4px!important;border-style:dashed!important;color:#888!important}
+.nt27-add-btn:hover{color:#111!important;border-style:solid!important}
+.nt27-del-btn{background:none!important;border:none!important;cursor:pointer;opacity:.2;font-size:.8rem;padding:0 2px;vertical-align:middle;line-height:1;margin-left:4px}
+.nt27-del-btn:hover{opacity:1!important}
 </style>
 </head>
 <body>
@@ -199,6 +217,15 @@ body::before{content:'🐝';position:fixed;top:12px;right:20px;font-size:2.5rem;
       <p>Sauldorf-Boll · 5.–7. Februar 2027 · Schlachtruf: BIEN-STICH!</p>
     </div>
     <div class="header-badge">⚙ Orgateam</div>
+  </div>
+  <div class="nt27-toolbar">
+    <span>✏ Bearbeitungsmodus aktiv — alle Felder klickbar</span>
+    <span id="nt27-saved">✓ Gespeichert</span>
+    <div style="margin-left:auto;display:flex;gap:6px">
+      <button onclick="NT27.exportAll()" title="Alle Änderungen als JSON exportieren">📥 Export</button>
+      <button onclick="NT27.importAll()" title="Gespeicherte Daten importieren">📤 Import</button>
+      <button class="nt27-reset-btn" onclick="NT27.resetAll()" title="Alle Änderungen zurücksetzen">🗑 Reset</button>
+    </div>
   </div>
   <nav class="nav" id="nav">
     <button class="nav-btn active" onclick="show('dashboard',this)">📊 Dashboard</button>
@@ -3007,6 +3034,12 @@ function show(id, btn) {
   if (id === 'dashboard' && !window._charts) initCharts();
   if (id === 'tickets' && !window._ticketChart) initTicketChart();
   if (id === 'tombola' && !window._tombolaChart) initTombolaChart();
+  // NT27: Tabellen lazy initialisieren
+  if (id === 'umzug'    && !window._nt27umzug)     { window._nt27umzug    = true; nt27InitTable('zugTbl',       'umzug',    {skipNr:true}); }
+  if (id === 'anmeldung'&& !window._nt27anmeldung) { window._nt27anmeldung= true; nt27InitTable('zunftTabelle', 'anmeldung',{skipNr:true}); }
+  if (id === 'kontakte' && !window._nt27kontakte)  { window._nt27kontakte = true; nt27InitKontakte(); }
+  if (id === 'finanzen' && !window._nt27finanzen)  { window._nt27finanzen = true; nt27InitFinanzen(); }
+  if (id === 'programm' && !window._nt27programm)  { window._nt27programm = true; nt27InitProgramm(); }
 }
 
 // ── Chart: Anmeldungsverlauf ─────────────────────────────────────────────────
@@ -3818,8 +3851,311 @@ function spInit() {
   spView('planer');
 }
 
+// ═══════════════════════════════════════════════════════════════════
+// NT27 — Universelles Bearbeitungs- & Datenlayer
+// ═══════════════════════════════════════════════════════════════════
+
+var NT27 = {
+  save: function(k,v){ try{localStorage.setItem('nt27_'+k,JSON.stringify(v));}catch(e){} },
+  load: function(k,d){ try{var x=localStorage.getItem('nt27_'+k);return x!==null?JSON.parse(x):d;}catch(e){return d;} },
+  exportAll: function(){
+    var out={};
+    for(var i=0;i<localStorage.length;i++){
+      var k=localStorage.key(i);
+      if(k.startsWith('nt27_')||k.startsWith('sp_')) out[k]=localStorage.getItem(k);
+    }
+    var a=document.createElement('a');
+    a.href='data:application/json;charset=utf-8,﻿'+encodeURIComponent(JSON.stringify(out,null,2));
+    a.download='NT2027-Backup-'+new Date().toISOString().slice(0,10)+'.json';
+    a.click();
+  },
+  importAll: function(){
+    var inp=document.createElement('input');inp.type='file';inp.accept='.json';
+    inp.onchange=function(e){
+      var r=new FileReader();
+      r.onload=function(ev){
+        try{
+          var d=JSON.parse(ev.target.result);
+          Object.keys(d).forEach(function(k){localStorage.setItem(k,d[k]);});
+          alert('✅ Daten importiert! Seite wird neu geladen.');location.reload();
+        }catch(ex){alert('❌ Importfehler: '+ex.message);}
+      };
+      r.readAsText(e.target.files[0]);
+    };
+    inp.click();
+  },
+  resetAll: function(){
+    if(!confirm('Alle gespeicherten Änderungen löschen?\nDie Seite wird auf die Ausgangsdaten zurückgesetzt.')) return;
+    var keys=[];
+    for(var i=0;i<localStorage.length;i++) keys.push(localStorage.key(i));
+    keys.forEach(function(k){ if(k.startsWith('nt27_')||k.startsWith('sp_')) localStorage.removeItem(k); });
+    location.reload();
+  }
+};
+
+function nt27Flash(){
+  var el=document.getElementById('nt27-saved');
+  if(!el) return;
+  el.style.opacity='1'; el.style.transform='scale(1.1)';
+  clearTimeout(el._t);
+  el._t=setTimeout(function(){el.style.opacity='0';el.style.transform='';},2200);
+}
+
+// ── Universelle Inline-Zellen (data-nt27="key") ─────────────────
+function nt27InitCells(){
+  document.querySelectorAll('[data-nt27]').forEach(function(el){
+    var k=el.dataset.nt27;
+    var saved=localStorage.getItem('nt27_c_'+k);
+    if(saved!==null) el.innerHTML=saved;
+    el.contentEditable='true';
+    el.title='Klicken zum Bearbeiten';
+    el.addEventListener('blur',function(){
+      localStorage.setItem('nt27_c_'+k,this.innerHTML);
+      nt27Flash();
+    });
+    el.addEventListener('keydown',function(e){
+      if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();this.blur();}
+      if(e.key==='Escape'){this.blur();}
+    });
+  });
+}
+
+// ── Tabellen: Inline-Edit + Drag & Drop + Add/Delete ────────────
+function nt27InitTable(tableId, saveKey, opts){
+  opts=opts||{};
+  var tbl=document.getElementById(tableId);
+  if(!tbl) return;
+  var tbody=tbl.querySelector('tbody');
+  if(!tbody) return;
+
+  // Add handle <th> to thead if not already present
+  var thead=tbl.querySelector('thead tr');
+  if(thead && !thead.querySelector('.nt27-th')){
+    var th=document.createElement('th');
+    th.className='nt27-th';
+    th.style.cssText='width:18px;padding:2px 4px';
+    thead.insertBefore(th,thead.firstChild);
+  }
+
+  // Restore saved tbody content
+  var saved=localStorage.getItem('nt27_t_'+saveKey);
+  if(saved) tbody.innerHTML=saved;
+
+  nt27BindRows(tbody, saveKey, opts);
+
+  // "Neue Zeile" button below table
+  var wrap=tbl.closest('[style*="overflow"]')||tbl.parentNode;
+  if(wrap && !wrap.querySelector('.nt27-add-btn')){
+    var btn=document.createElement('button');
+    btn.className='btn btn-outline nt27-add-btn';
+    btn.innerHTML='➕ Neue Zeile hinzufügen';
+    var cols=(thead ? thead.cells.length-1 : 5);
+    btn.onclick=function(){nt27AddRow(tbody,saveKey,cols,opts);};
+    wrap.insertAdjacentElement('afterend',btn)||wrap.parentNode.insertBefore(btn, wrap.nextSibling);
+  }
+}
+
+function nt27BindRows(tbody, saveKey, opts){
+  opts=opts||{};
+  var dragSrc=null;
+
+  Array.from(tbody.rows).forEach(function(row){
+    // Handle cell
+    if(!row.querySelector('.nt27-handle')){
+      var hTd=document.createElement('td');
+      hTd.className='nt27-handle';
+      hTd.innerHTML='⠿';
+      hTd.title='Zeile verschieben (Drag & Drop)';
+      row.insertBefore(hTd,row.cells[0]);
+    }
+
+    // Make data cells editable (skip handle col [0] and optionally Nr col [1])
+    Array.from(row.cells).forEach(function(td,i){
+      if(i===0) return; // handle
+      if(opts.skipNr && i===1) return; // Nr.
+      if(td.querySelector('.nt27-del-btn')) return; // last cell with del
+      if(td.classList.contains('nt27-handle')) return;
+      td.contentEditable='true';
+      td.title='Klicken zum Bearbeiten';
+      td.addEventListener('blur',function(){ nt27SaveTable(tbody,saveKey); });
+      td.addEventListener('keydown',function(e){
+        if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();this.blur();}
+        if(e.key==='Escape'){this.blur();}
+      });
+    });
+
+    // Delete button on last real cell
+    var lastTd=row.cells[row.cells.length-1];
+    if(lastTd && !lastTd.querySelector('.nt27-del-btn')){
+      var delBtn=document.createElement('button');
+      delBtn.className='nt27-del-btn';
+      delBtn.innerHTML='✕';
+      delBtn.title='Zeile löschen';
+      delBtn.onclick=function(e){
+        e.stopPropagation();
+        if(confirm('Diese Zeile löschen?')){row.remove();nt27SaveTable(tbody,saveKey);}
+      };
+      lastTd.appendChild(delBtn);
+    }
+
+    // Drag & Drop
+    row.draggable=true;
+    row.addEventListener('dragstart',function(e){
+      dragSrc=this; this.classList.add('nt27-row-dragging');
+      e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain','nt27row');
+    });
+    row.addEventListener('dragend',function(){
+      this.classList.remove('nt27-row-dragging');
+      Array.from(tbody.rows).forEach(function(r){r.classList.remove('nt27-drag-over');});
+      nt27SaveTable(tbody,saveKey);
+    });
+    row.addEventListener('dragover',function(e){
+      e.preventDefault(); e.dataTransfer.dropEffect='move';
+      if(this!==dragSrc) this.classList.add('nt27-drag-over');
+    });
+    row.addEventListener('dragleave',function(){ this.classList.remove('nt27-drag-over'); });
+    row.addEventListener('drop',function(e){
+      e.preventDefault(); e.stopPropagation();
+      this.classList.remove('nt27-drag-over');
+      if(!dragSrc||dragSrc===this) return;
+      var rect=this.getBoundingClientRect();
+      tbody.insertBefore(dragSrc, e.clientY<rect.top+rect.height/2 ? this : this.nextSibling);
+    });
+  });
+}
+
+function nt27AddRow(tbody, saveKey, cols, opts){
+  var newRow=document.createElement('tr');
+  var hTd=document.createElement('td'); hTd.className='nt27-handle'; hTd.innerHTML='⠿'; newRow.appendChild(hTd);
+  for(var i=0;i<cols;i++){
+    var td=document.createElement('td'); td.contentEditable='true';
+    td.style.cssText='color:#999;font-style:italic';
+    td.innerHTML='neu…';
+    newRow.appendChild(td);
+  }
+  tbody.appendChild(newRow);
+  nt27BindRows(tbody,saveKey,opts||{});
+  nt27SaveTable(tbody,saveKey);
+  var firstEdit=newRow.cells[1];
+  if(firstEdit){firstEdit.focus();firstEdit.innerHTML='';}
+}
+
+function nt27SaveTable(tbody, saveKey){
+  localStorage.setItem('nt27_t_'+saveKey, tbody.innerHTML);
+  nt27Flash();
+}
+
+// ── Finanzen: Inline-Edit + Zeilen hinzufügen ───────────────────
+function nt27InitFinanzen(){
+  var fin=document.getElementById('finanzen');
+  if(!fin) return;
+  var saved=localStorage.getItem('nt27_fin');
+  if(saved){ var g=fin.querySelector('.grid2'); if(g) g.innerHTML=saved; }
+
+  fin.querySelectorAll('.fin-cat,.fin-amt-pos,.fin-amt-neg').forEach(function(el){
+    el.contentEditable='true';
+    el.style.cursor='text';
+    el.addEventListener('blur',function(){ nt27SaveFinanzen(fin); });
+    el.addEventListener('keydown',function(e){ if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();this.blur();} });
+  });
+
+  // Add "Neue Zeile" & "Zeile löschen" to existing fin-rows
+  fin.querySelectorAll('.fin-row').forEach(function(row){
+    if(row.querySelector('.nt27-del-btn')) return;
+    var btn=document.createElement('button');
+    btn.className='nt27-del-btn'; btn.innerHTML='✕'; btn.title='Zeile löschen';
+    btn.onclick=function(){ if(confirm('Zeile löschen?')){row.remove();nt27SaveFinanzen(fin);} };
+    row.appendChild(btn);
+  });
+
+  // Add "Neue Zeile" buttons to each panel
+  fin.querySelectorAll('.panel').forEach(function(panel,i){
+    var body=panel.querySelector('.panel-body');
+    if(!body||panel.querySelector('.nt27-add-btn')) return;
+    var isPos=i===0;
+    var btn=document.createElement('button');
+    btn.className='btn btn-outline nt27-add-btn';
+    btn.innerHTML='➕ Neue Budgetzeile';
+    btn.onclick=function(){nt27AddFinRow(body,isPos,fin);};
+    body.appendChild(btn);
+  });
+}
+
+function nt27AddFinRow(body, isPos, fin){
+  var row=document.createElement('div'); row.className='fin-row';
+  var cat=document.createElement('span'); cat.className='fin-cat'; cat.contentEditable='true'; cat.style.cursor='text'; cat.innerHTML='Neue Position…';
+  var amt=document.createElement('span'); amt.className=isPos?'fin-amt-pos':'fin-amt-neg'; amt.contentEditable='true'; amt.style.cursor='text'; amt.innerHTML='0 €';
+  var del=document.createElement('button'); del.className='nt27-del-btn'; del.innerHTML='✕'; del.title='Löschen';
+  del.onclick=function(){ if(confirm('Zeile löschen?')){row.remove();nt27SaveFinanzen(fin);} };
+  [cat,amt].forEach(function(el){
+    el.addEventListener('blur',function(){nt27SaveFinanzen(fin);});
+    el.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();this.blur();}});
+  });
+  row.appendChild(cat); row.appendChild(amt); row.appendChild(del);
+  var summe=body.querySelector('[style*="border-top"]');
+  summe ? body.insertBefore(row,summe) : body.appendChild(row);
+  cat.focus(); cat.innerHTML='';
+}
+
+function nt27SaveFinanzen(fin){
+  var g=(fin||document.getElementById('finanzen')).querySelector('.grid2');
+  if(g) localStorage.setItem('nt27_fin',g.innerHTML);
+  nt27Flash();
+}
+
+// ── Programm: Inline-Edit ────────────────────────────────────────
+function nt27InitProgramm(){
+  var prog=document.getElementById('programm');
+  if(!prog) return;
+  var saved=localStorage.getItem('nt27_prog');
+  if(saved){ var sg=prog.querySelector('.sched-grid'); if(sg) sg.innerHTML=saved; }
+  prog.querySelectorAll('.sched-time,.sched-title,.sched-loc').forEach(function(el){
+    el.contentEditable='true'; el.style.cursor='text';
+    el.addEventListener('blur',function(){
+      var sg=prog.querySelector('.sched-grid');
+      if(sg) localStorage.setItem('nt27_prog',sg.innerHTML);
+      nt27Flash();
+    });
+    el.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();this.blur();}});
+  });
+}
+
+// ── Kontakte: CRUD ───────────────────────────────────────────────
+function nt27InitKontakte(){
+  document.querySelectorAll('.kontakt-tbl').forEach(function(tbl,i){
+    if(!tbl.id) tbl.id='ktbl-'+i;
+    var saveKey='kont-'+i;
+    var panel=tbl.closest('.panel');
+    var thead=tbl.querySelector('thead tr');
+    if(thead && !thead.querySelector('.nt27-th')){
+      var th=document.createElement('th'); th.className='nt27-th'; th.style.cssText='width:18px;padding:2px 4px';
+      thead.insertBefore(th,thead.firstChild);
+    }
+    var tbody=tbl.querySelector('tbody');
+    if(!tbody) return;
+    var saved=localStorage.getItem('nt27_t_'+saveKey);
+    if(saved) tbody.innerHTML=saved;
+    nt27BindRows(tbody,saveKey,{skipNr:false});
+    // Add Kontakt button
+    if(panel && !panel.querySelector('.nt27-add-kontakt')){
+      var panelBody=panel.querySelector('.panel-body');
+      var cols=thead?thead.cells.length-1:5;
+      var btn=document.createElement('button');
+      btn.className='btn btn-outline nt27-add-btn nt27-add-kontakt';
+      btn.innerHTML='➕ Kontakt hinzufügen';
+      btn.onclick=(function(tb,sk,c){ return function(){nt27AddRow(tb,sk,c,{skipNr:false});}; })(tbody,saveKey,cols);
+      panelBody.appendChild(btn);
+    }
+  });
+}
+
 // Init beim Laden
-document.addEventListener('DOMContentLoaded', () => { initCharts(); });
+document.addEventListener('DOMContentLoaded', function(){
+  initCharts();
+  nt27InitCells();
+  // Abschnitte die sofort sichtbar sind (Dashboard ist aktiv)
+  // Andere Abschnitte werden lazy beim Tab-Klick initialisiert (show())
+});
 </script>
 </body>
 </html>
