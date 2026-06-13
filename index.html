@@ -3046,11 +3046,16 @@ function show(id, btn) {
   if (id === 'tombola' && !window._tombolaChart) initTombolaChart();
   // NT27: Tabellen lazy initialisieren
   if (id === 'umzug') {
-    if (!window._nt27umzug) { window._nt27umzug = true; nt27InitTable('zugTbl', 'umzug', {skipNr:true}); }
+    if (!window._nt27umzug) { window._nt27umzug = true; nt27InitTable('zugTbl', 'umzug', {skipNr:true, renumber:true}); }
     nt27InitMapUpload();
     nt27RenderZunftPool();
   }
-  if (id === 'anmeldung'&& !window._nt27anmeldung) { window._nt27anmeldung= true; nt27InitTable('zunftTabelle', 'anmeldung',{skipNr:true}); }
+  if (id === 'anmeldung' && !window._nt27anmeldung) {
+    window._nt27anmeldung = true;
+    nt27InitTable('zunftTabelle', 'anmeldung', {skipNr:true});
+    var _ztb = document.querySelector('#zunftTabelle tbody');
+    if (_ztb) nt27InitZunftSelects(_ztb);
+  }
   if (id === 'kontakte' && !window._nt27kontakte)  { window._nt27kontakte = true; nt27InitKontakte(); }
   if (id === 'finanzen' && !window._nt27finanzen)  { window._nt27finanzen = true; nt27InitFinanzen(); }
   if (id === 'programm' && !window._nt27programm)  { window._nt27programm = true; nt27InitProgramm(); }
@@ -4021,6 +4026,7 @@ function nt27BindRows(tbody, saveKey, opts){
     row.addEventListener('dragend',function(){
       this.classList.remove('nt27-row-dragging');
       Array.from(tbody.rows).forEach(function(r){r.classList.remove('nt27-drag-over');});
+      if(opts.renumber) nt27RenumberRows(tbody);
       nt27SaveTable(tbody,saveKey);
     });
     row.addEventListener('dragover',function(e){
@@ -4338,6 +4344,75 @@ function nt27AddToUmzug(name, ort, tn) {
   nt27RenderZunftPool();
 }
 
+// ── Zeilen neu nummerieren (nach Drag & Drop) ────────────────────
+function nt27RenumberRows(tbody){
+  var n=1;
+  Array.from(tbody.rows).forEach(function(row){
+    if(row.querySelector('td[colspan]')) return;
+    var hasHandle=!!row.querySelector('.nt27-handle');
+    var nrCell=row.cells[hasHandle?1:0];
+    if(nrCell && !nrCell.classList.contains('nt27-handle')){
+      nrCell.textContent=n++;
+    }
+  });
+}
+
+// ── Zunftanmeldung: Status-Dropdown + Umzug-Toggle ───────────────
+function nt27InitZunftSelects(tbody){
+  Array.from(tbody.rows).forEach(function(row){
+    if(row.querySelector('td[colspan]')) return;
+    var cells=row.cells;
+    if(!cells[0]||!cells[0].classList.contains('nt27-handle')) return;
+
+    // ── Umzug (cells[9]) ──
+    var uTd=cells[9];
+    if(uTd && !uTd.dataset.nt27ui){
+      uTd.dataset.nt27ui='1';
+      uTd.removeAttribute('contenteditable');
+      uTd.style.cssText='cursor:pointer;text-align:center';
+      uTd.title='Klicken zum Ändern';
+      var uTxt=uTd.textContent.replace(/[✕⠿]/g,'').trim();
+      var isJa=uTxt.includes('✅')||uTxt.toLowerCase()==='ja';
+      uTd.innerHTML='<span class="nt27-umzug-toggle" style="font-size:'+(isJa?'1.1rem':'.8rem')+';color:'+(isJa?'':'#999')+'">'+(isJa?'✅ Ja':'❌ Nein')+'</span>';
+      uTd.onclick=function(e){
+        e.stopPropagation();
+        var sp=this.querySelector('.nt27-umzug-toggle');
+        var nowJa=sp.textContent.trim()==='✅ Ja';
+        if(nowJa){ sp.textContent='❌ Nein'; sp.style.fontSize='.8rem'; sp.style.color='#999'; }
+        else      { sp.textContent='✅ Ja';   sp.style.fontSize='1.1rem'; sp.style.color=''; }
+        var tb=this.closest('tbody'); if(tb) nt27SaveTable(tb,'anmeldung');
+      };
+    }
+
+    // ── Status (cells[10]) ──
+    var sTd=cells[10];
+    if(sTd && !sTd.dataset.nt27ui){
+      sTd.dataset.nt27ui='1';
+      sTd.removeAttribute('contenteditable');
+      sTd.style.padding='2px 6px';
+      var delBtn=sTd.querySelector('.nt27-del-btn');
+      var curText=sTd.textContent.replace(/[✕]/g,'').trim();
+      var statusOpts=['Bestätigt','Ausstehend','Gastgeber','Keine Rückmeldung','Abgesagt'];
+      var sel=document.createElement('select');
+      sel.style.cssText='font-size:.75rem;border:1px solid #ddd;border-radius:12px;padding:2px 8px;cursor:pointer;background:white;max-width:140px';
+      statusOpts.forEach(function(s){
+        var o=document.createElement('option');
+        o.value=s; o.textContent=s;
+        if(curText.includes(s.split(' ')[0])) o.setAttribute('selected','selected');
+        sel.appendChild(o);
+      });
+      sel.onchange=function(){
+        Array.from(this.options).forEach(function(o){o.removeAttribute('selected');});
+        this.options[this.selectedIndex].setAttribute('selected','selected');
+        var tb=this.closest('tbody'); if(tb) nt27SaveTable(tb,'anmeldung');
+      };
+      sTd.innerHTML='';
+      sTd.appendChild(sel);
+      if(delBtn) sTd.appendChild(delBtn);
+    }
+  });
+}
+
 // ── HTML escapen ─────────────────────────────────────────────────
 function nt27Escape(s){
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -4375,9 +4450,10 @@ function zunftAnmelden(){
     '<td><span class="pill pill-gold">Ausstehend</span></td>';
   tbody.appendChild(tr);
 
-  // NT27: Zeile editierbar machen + speichern
+  // NT27: Zeile editierbar machen + Selects einbauen + speichern
   if(window._nt27anmeldung){
     nt27BindRows(tbody,'anmeldung',{skipNr:true});
+    nt27InitZunftSelects(tbody);
     nt27SaveTable(tbody,'anmeldung');
   } else {
     localStorage.setItem('nt27_t_anmeldung', tbody.innerHTML);
